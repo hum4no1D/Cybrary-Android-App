@@ -2,6 +2,7 @@ package com.example.cybrary02.cybrary;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +36,7 @@ public class ListActivity extends AppCompatActivity {
 
         initializeListView();
 
-        CookieManager cookieManager = new CookieManager(new PersistentCookieStore(getApplicationContext()), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+        CookieManager cookieManager = new CookieManager(((CybraryApplication) getApplication()).getCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
 
         //Download the list of courses from the website
@@ -45,6 +46,8 @@ public class ListActivity extends AppCompatActivity {
         StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Log.e("WTF", "LOGGED IN?" + (response.contains("3355") ? "YES": "NOOO :("));
+
                 //Server replied successfully (200)
                 //Now we want to list the available courses
                 ArrayList<Course> courses = new ArrayList<>();

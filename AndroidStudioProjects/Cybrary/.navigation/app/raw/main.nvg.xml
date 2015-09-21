@@ -6,18 +6,26 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.example.cybrary02.cybrary.MainActivity"/>
+        className = "com.example.cybrary02.cybrary.ListActivity"/>
       <point      
-        x = "348"      
-        y = "80"/>
+        x = "1340"      
+        y = "168"/>
     </statePointEntry>
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.example.cybrary02.cybrary.ListActivity"/>
+        className = "com.example.cybrary02.cybrary.videoplayer"/>
       <point      
-        x = "1776"      
-        y = "100"/>
+        x = "816"      
+        y = "172"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.example.cybrary02.cybrary.MainActivity"/>
+      <point      
+        x = "104"      
+        y = "168"/>
     </statePointEntry>
   </locations>
 </navigationModel>
