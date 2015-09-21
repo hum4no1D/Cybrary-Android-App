@@ -3,8 +3,10 @@ package com.example.cybrary02.cybrary;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,7 +30,9 @@ import java.net.CookiePolicy;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends Activity {
+public class LoginActivity extends Activity {
+
+    SharedPreferences credentials;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,14 @@ public class MainActivity extends Activity {
 
         CookieManager cookieManager = new CookieManager(((CybraryApplication) getApplication()).getCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
+
+        credentials = getSharedPreferences("credentials", Context.MODE_PRIVATE);
+
+        if(credentials.contains("login")) {
+            Toast.makeText(this, "Automatically logged in as " + credentials.getString("login", ""), Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
+            finish();
+        }
     }
 
     @Override
@@ -69,14 +81,14 @@ public class MainActivity extends Activity {
         user = (EditText)findViewById(R.id.Login);
         pass = (EditText)findViewById(R.id.Senha);
         tv = (TextView)findViewById(R.id.Situacao);
-        dialog = ProgressDialog.show(MainActivity.this, "", "Validating user...", true);
+        dialog = ProgressDialog.show(LoginActivity.this, "", "Validating user...", true);
 
         String reqUrl = "https://www.cybrary.it/wp-login.php";
         final String log = user.getText().toString().trim();
         final String pwd = pass.getText().toString().trim();
 
         if(log.isEmpty() || pwd.isEmpty()) {
-            Toast.makeText(MainActivity.this, "You need to fill in both fields!", Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, "You need to fill in both fields!", Toast.LENGTH_LONG).show();
             dialog.dismiss();
             return;
         }
@@ -90,19 +102,20 @@ public class MainActivity extends Activity {
                 //Now we want to check if the login was successful too
                 //So we have to ensure we had a valid username AND a valid password
                 if (!response.contains("Invalid username") && !response.contains("The password you entered for the username") && response.contains(log + "&gt; on Cybrary")) {
-                    Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     tv.setText("Login Successfully");
+                    getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().putString("login", log).commit();
 
-                    //ANow, start ListActivity
-                    startActivity(new Intent(MainActivity.this, ListActivity.class));
+                    //ANow, start CoursesListActivity
+                    startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
                     dialog.dismiss();
                 }
                 else {
-                    Toast.makeText(MainActivity.this, "Login failure :(", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Login failure :(", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     //ACan't find TVAchat on your window anymore
-                    Log.i("MainActivity", "Login failure, server replied: " + response);
+                    Log.i("LoginActivity", "Login failure, server replied: " + response);
                 }
             }
         }, new Response.ErrorListener() {
@@ -113,9 +126,9 @@ public class MainActivity extends Activity {
 
                 //ADepending on your wordpress configuration you may need to move this code higher, near the "login failure" instead
                 //Ai don't know if wordpress replies with custom http status code
-                MainActivity.this.runOnUiThread(new Runnable() {
+                LoginActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                         builder.setTitle("Login Error.");
                         builder.setMessage("User not Found.")
                                 .setCancelable(false)

@@ -3,6 +3,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_list">list</string>
-    <string name="title_activity_videoplayer">videoplayer</string>
+    <string name="title_activity_list">Courses list</string>
+    <string name="title_activity_videoplayer">Course detail</string>
 </resources>

@@ -1,8 +1,9 @@
 package com.example.cybrary02.cybrary;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ListActivity extends AppCompatActivity {
+public class CoursesListActivity extends AppCompatActivity {
     private ListView listView;
 
     @Override
@@ -39,14 +40,24 @@ public class ListActivity extends AppCompatActivity {
         CookieManager cookieManager = new CookieManager(((CybraryApplication) getApplication()).getCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
 
-        //Download the list of courses from the website
-        //ACreating a new Volley HTTP POST request
+        downloadCourses();
+    }
+
+    public void downloadCourses() {
+        // Download the list of courses from the website
+        // Creating a new Volley HTTP POST request
         String reqUrl = "https://www.cybrary.it/courses";
         RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.e("WTF", "LOGGED IN?" + (response.contains("3355") ? "YES": "NOOO :("));
+                if(!response.contains(getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "UNKNOWNUSER"))) {
+                    //We've been logged out!
+                    getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().remove("login");
+                    startActivity(new Intent(CoursesListActivity.this, LoginActivity.class));
+                    Toast.makeText(CoursesListActivity.this, "Your session expired, please log in again", Toast.LENGTH_LONG).show();
+                    finish();
+                }
 
                 //Server replied successfully (200)
                 //Now we want to list the available courses
@@ -64,7 +75,7 @@ public class ListActivity extends AppCompatActivity {
                     courses.add(course);
                 }
 
-                listView.setAdapter(new CourseAdapter(ListActivity.this, courses));
+                listView.setAdapter(new CourseAdapter(CoursesListActivity.this, courses));
             }
         }, new Response.ErrorListener() {
             @Override
@@ -85,10 +96,14 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Course course = (Course) parent.getItemAtPosition(position);
-                Toast.makeText(ListActivity.this, "You clicked on course:" + course.name, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(CoursesListActivity.this, CourseActivity.class);
+                intent.putExtra("course", course);
+                startActivity(intent);
             }
         });
     }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
