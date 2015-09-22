@@ -1,6 +1,5 @@
 package com.example.cybrary02.cybrary;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.android.volley.Request;
@@ -19,8 +17,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.cybrary02.cybrary.adapter.CourseAdapter;
+import com.example.cybrary02.cybrary.adapter.VideoAdapter;
 import com.example.cybrary02.cybrary.pojo.Course;
+import com.example.cybrary02.cybrary.pojo.Video;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -36,12 +35,13 @@ public class CourseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_videoplayer);
+        setContentView(R.layout.activity_course);
 
+        // Revert this when Internet is back, and restore the manifest to add the LAUNCHERAintent to the LoginActivity
         course = (Course) getIntent().getSerializableExtra("course");
+        // course = new Course("Linux+", "https://www.cybrary.it/course/comptia-linux-plus/");
 
         setTitle(course.name);
-        Toast.makeText(this, "DISPLAYINGACOURSE " + course.url, Toast.LENGTH_LONG).show();
 
         // Add a button to the title to get back to the previous activity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -87,21 +87,21 @@ public class CourseActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 //Server replied successfully (200)
                 //Now we want to list the videos
-                ArrayList<Course> courses = new ArrayList<>();
+                ArrayList<Video> videos = new ArrayList<>();
 
                 // Videos are formatted like this:
-                // <li><a href="http://www.cybrary.it/course/ccna/">CCNA</a></li>
+                // <a href="https://www.cybrary.it/video/the-bios/" class="title">BIOS &#8211; Basic Input Output System</a>
                 // We'll use a regexp to match them all in the raw HTML:
-                Pattern p = Pattern.compile("cybrary\\.it/course/(.+)\">([^\\>]+)\\<\\/a\\>\\<\\/li\\>");
+                Pattern p = Pattern.compile("cybrary\\.it/video/(.+)\" class=\"title\">([^\\>]+)\\<\\/a\\>");
                 Matcher m = p.matcher(response);
                 while(m.find()) {
-                    String url = "https://www.cybrary.it/course/" + m.group(1);
+                    String url = "https://www.cybrary.it/video/" + m.group(1);
                     String name = m.group(2);
-                    Course course = new Course(name, url);
-                    courses.add(course);
+                    Video video = new Video(name, url);
+                    videos.add(video);
                 }
 
-                listView.setAdapter(new CourseAdapter(CoursesListActivity.this, courses));
+                listView.setAdapter(new VideoAdapter(CourseActivity.this, videos));
             }
         }, new Response.ErrorListener() {
             @Override

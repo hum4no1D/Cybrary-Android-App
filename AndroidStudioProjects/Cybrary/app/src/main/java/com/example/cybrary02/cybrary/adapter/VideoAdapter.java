@@ -9,27 +9,27 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.cybrary02.cybrary.R;
-import com.example.cybrary02.cybrary.pojo.Course;
+import com.example.cybrary02.cybrary.pojo.Video;
 
 import java.util.ArrayList;
 
 
-public class CourseAdapter extends ArrayAdapter<Course> {
-    public CourseAdapter(Context context, ArrayList<Course> courses) {
-        super(context, 0, courses);
+public class VideoAdapter extends ArrayAdapter<Video> {
+    public VideoAdapter(Context context, ArrayList<Video> videos) {
+        super(context, 0, videos);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        Course course = getItem(position);
+        Video video = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_course, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_video, parent, false);
         }
 
-        TextView messageName = (TextView) convertView.findViewById(R.id.course_name);
-        messageName.setText(Html.fromHtml(course.name));
+        TextView messageName = (TextView) convertView.findViewById(R.id.video_name);
+        messageName.setText(Html.fromHtml(video.name));
 
         // Return the completed view to render on screen
         return convertView;

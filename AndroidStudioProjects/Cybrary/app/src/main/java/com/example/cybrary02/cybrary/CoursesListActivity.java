@@ -33,7 +33,7 @@ public class CoursesListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
+        setContentView(R.layout.activity_courses_list);
 
         initializeListView();
 
@@ -53,7 +53,7 @@ public class CoursesListActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 if(!response.contains(getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "UNKNOWNUSER"))) {
                     //We've been logged out!
-                    getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().remove("login");
+                    getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().remove("login").commit();
                     startActivity(new Intent(CoursesListActivity.this, LoginActivity.class));
                     Toast.makeText(CoursesListActivity.this, "Your session expired, please log in again", Toast.LENGTH_LONG).show();
                     finish();
