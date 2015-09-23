@@ -1,14 +1,15 @@
 package com.example.cybrary02.cybrary;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.android.volley.Request;
@@ -21,16 +22,21 @@ import com.example.cybrary02.cybrary.adapter.VideoAdapter;
 import com.example.cybrary02.cybrary.pojo.Course;
 import com.example.cybrary02.cybrary.pojo.Video;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CourseActivity extends AppCompatActivity {
     private ListView listView;
     private Course course;
+    private VideoView vidView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +57,10 @@ public class CourseActivity extends AppCompatActivity {
         CookieManager cookieManager = new CookieManager(((CybraryApplication) getApplication()).getCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
 
-        downloadVideos();
+        downloadVideos(course);
 
-        VideoView vidView =  (VideoView)findViewById(R.id.myVideo);
-
-        String vidAddress = "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4";
-        Uri vidUri = Uri.parse(vidAddress);
-        vidView.setVideoURI(vidUri);
-        vidView.start();
-        //WebView viewvideo = (WebView)findViewById(R.id.webView1);
-        //viewvideo.loadData("<iframe src=\"http://player.vimeo.com/video/" + 127350537 + "\" width=\"180px\" height=\"180px\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>", "text/html", "utf-8");
-    }
+        vidView = (VideoView) findViewById(R.id.myVideo);
+   }
 
     public void initializeListView() {
         listView = (ListView) findViewById(R.id.listView);
@@ -69,17 +68,107 @@ public class CourseActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Course course = (Course) parent.getItemAtPosition(position);
-                Intent intent = new Intent(CourseActivity.this, CourseActivity.class);
-                intent.putExtra("course", course);
-                startActivity(intent);
+                Video video = (Video) parent.getItemAtPosition(position);
+                playVideo(video);
             }
         });
     }
 
-    public void downloadVideos() {
+    public void playVideo(final Video video) {
         // Download the list of courses from the website
-        // Creating a new Volley HTTP POST request
+        // Creating a new Volley HTTP GET request
+        String reqUrl = video.url;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //We're looking for something which looks like this:
+                // <iframe src="https://player.vimeo.com/video/116096483" width="500" height="281" frameborder="0"></iframe>
+                // We'll use a regexp to match this in the raw HTML:
+                Pattern p = Pattern.compile("player\\.vimeo\\.com/video/([0-9]+)\" width");
+                Matcher m = p.matcher(response);
+                while(m.find()) {
+                    video.vimeoMetadataUrl = "https://player.vimeo.com/video/" + m.group(1);
+                }
+                downloadVideoMetadata(video);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Some server error, or no network connectivity
+                error.printStackTrace();
+            }
+        });
+
+        // Send the request
+        queue.add(messagesRequest);
+    }
+
+    public void downloadVideoMetadata(final Video video) {
+        if(video.vimeoMetadataUrl == null) {
+            throw new RuntimeException("Use playVideo before calling downloadVideoMetadata");
+        }
+        // Download the list of courses from the website
+        // Creating a new Volley HTTP GET request
+        String reqUrl = video.vimeoMetadataUrl;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(!response.contains(".mp4")) {
+                    Toast.makeText(CourseActivity.this, "Can't access private Vimeo URL :(", Toast.LENGTH_LONG).show();
+                    Log.e("VIMEO", response);
+                    return;
+                }
+
+                //We're looking for something which looks like this:
+                // <script>(function(e,a){var t=JSONJSON</script>
+                // We'll use a regexp to match this in the raw HTML:
+                Pattern p = Pattern.compile("\\<script\\>\\(function\\(e,a\\)\\{var t=(.+)\\<\\/script\\>", Pattern.MULTILINE);
+                Matcher m = p.matcher(response);
+                while(m.find()) {
+                    try {
+                        video.vimeoMetadata = new JSONObject(m.group(1));
+                        video.videoUrl = video.vimeoMetadata.getJSONObject("request").getJSONObject("files").getJSONObject("h264").getJSONObject("sd").getString("url");
+                    }
+                    catch(JSONException e) {
+                        e.printStackTrace();
+                        Log.e("VIMEO", "Unable to parse JSON for " + m.group(1));
+                        return;
+                    }
+                    Log.i("VIMEO", "Playing video from " + video.videoUrl);
+
+                    Uri vidUri = Uri.parse(video.videoUrl);
+                    vidView.setVideoURI(vidUri);
+                    vidView.start();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Some server error, or no network connectivity
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public HashMap<String, String> getHeaders() {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("referer", course.url);
+                params.put("user-agent", "Mozilla Firefox");
+
+                Log.e("WTF", "REFERER IS " + course.url);
+                return params;
+            }
+        };;
+
+        // Send the request
+        queue.add(messagesRequest);
+    }
+
+    public void downloadVideos(Course course) {
+        // Download the list of courses from the website
+        // Creating a new Volley HTTP GET request
         String reqUrl = course.url;
         RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, new Response.Listener<String>() {
@@ -102,6 +191,11 @@ public class CourseActivity extends AppCompatActivity {
                 }
 
                 listView.setAdapter(new VideoAdapter(CourseActivity.this, videos));
+
+                // Play the first video automatically
+                if(videos.size() > 0) {
+                    playVideo(videos.get(0));
+                }
             }
         }, new Response.ErrorListener() {
             @Override
