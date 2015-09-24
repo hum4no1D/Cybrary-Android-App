@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cybrary02.cybrary.R;
@@ -30,6 +31,14 @@ public class VideoAdapter extends ArrayAdapter<Video> {
 
         TextView messageName = (TextView) convertView.findViewById(R.id.video_name);
         messageName.setText(Html.fromHtml(video.name));
+
+        ImageView downloadButton = (ImageView) convertView.findViewById(R.id.downloadButton);
+        downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //The user wants to download the video
+            }
+        });
 
         // Return the completed view to render on screen
         return convertView;
