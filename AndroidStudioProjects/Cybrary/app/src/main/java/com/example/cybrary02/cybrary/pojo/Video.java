@@ -1,6 +1,7 @@
 package com.example.cybrary02.cybrary.pojo;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,6 +16,8 @@ import com.example.cybrary02.cybrary.VideoUrlListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,19 +45,61 @@ public class Video {
         return url.replace("https://www.cybary.it", "").hashCode();
     }
 
+    public String getPotentialFileName() {
+        return Environment.getExternalStorageDirectory() + "/cybrary-" + getId() + ".mp4";
+    }
+
+    public boolean isLocallyAvailable() {
+        File f = new File(getPotentialFileName());
+        return f.exists();
+    }
+
     /**
      * Get the video mp4 URL nd notify the specified listener.
      * @return
      */
     public void getMp4Url(Context context, VideoUrlListener listener) {
 
-        // URLAalready loaded
+        // URL already loaded
         if(videoUrl != null) {
             listener.onUrlLoaded(this);
             return;
         }
 
         retrieveVimeoUrl(context, listener);
+    }
+
+    public boolean downloadForOfflineAccess() {
+        if(videoUrl == null) {
+            throw new RuntimeException("You need to call getMp4Url() before");
+        }
+
+        // Temporary filename, just checking everything works.
+        String fileName = getPotentialFileName();
+
+        try {
+            java.io.BufferedInputStream in = new java.io.BufferedInputStream(new java.net.URL(videoUrl).openStream());
+            java.io.FileOutputStream fos = new java.io.FileOutputStream(fileName);
+            java.io.BufferedOutputStream bout = new BufferedOutputStream(fos,1024);
+            byte[] data = new byte[1024];
+            int x=0;
+            while((x=in.read(data,0,1024))>=0){
+                bout.write(data,0,x);
+            }
+            fos.flush();
+            bout.flush();
+            fos.close();
+            bout.close();
+            in.close();
+
+        }catch (Exception e){
+            /* Display any Error to the GUI. */
+            e.printStackTrace();
+            Log.e("DOWNLOAD", "Unable to download file.");
+            return false;
+        }
+
+        return true;
     }
 
     private void downloadVideoMetadata(final Context context, final VideoUrlListener listener) {
