@@ -10,10 +10,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,11 +32,17 @@ import java.util.Map;
 public class LoginActivity extends Activity {
 
     SharedPreferences credentials;
-
+    EditText user,pass;
+    TextView tv;
+    ProgressDialog dialog = null;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        imageView.setImageResource(R.drawable.logowhite2);
+
 
         CookieManager cookieManager = new CookieManager(((CybraryApplication) getApplication()).getCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
@@ -50,32 +55,6 @@ public class LoginActivity extends Activity {
             finish();
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    EditText user,pass;
-    TextView tv;
-    ProgressDialog dialog = null;
 
     public void Log_in(View e){
         user = (EditText)findViewById(R.id.Login);
@@ -93,28 +72,28 @@ public class LoginActivity extends Activity {
             return;
         }
 
-        //ACreating a new Volley HTTP POST request
+        //Creating a new Volley HTTP POST request
         RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest messagesRequest = new StringRequest(Request.Method.POST, reqUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //Server replied successfully (200)
-                //Now we want to check if the login was successful too
-                //So we have to ensure we had a valid username AND a valid password
-                if (!response.contains("Invalid username") && !response.contains("The password you entered for the username") && response.contains(log + "&gt; on Cybrary")) {
+                //Now check if the login was successful too
+                //So ensure user had a valid username AND a valid password
+                if (!response.contains("Invalid username") && !response.contains("The password you entered for the username") && response.contains("@" + log + "<br")) {
                     Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     tv.setText("Login Successfully");
                     getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().putString("login", log).commit();
 
-                    //ANow, start CoursesListActivity
+                    //Now, start CoursesListActivity
                     startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
                     dialog.dismiss();
                 }
                 else {
                     Toast.makeText(LoginActivity.this, "Login failure :(", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
-                    //ACan't find TVAchat on your window anymore
+
                     Log.i("LoginActivity", "Login failure, server replied: " + response);
                 }
             }
@@ -124,8 +103,8 @@ public class LoginActivity extends Activity {
                 //Some server error, or no network connectivity
                 error.printStackTrace();
 
-                //ADepending on your wordpress configuration you may need to move this code higher, near the "login failure" instead
-                //Ai don't know if wordpress replies with custom http status code
+                //Depending on wordpress configuration you may need to move this code higher, near the "login failure" instead
+                //i don't know if wordpress replies with custom http status code
                 LoginActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);

@@ -1,5 +1,6 @@
 package com.example.cybrary02.cybrary;
 
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.android.volley.Request;
@@ -37,9 +39,10 @@ public class CourseActivity extends AppCompatActivity implements VideoUrlListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
 
-        // Revert this when Internet is back, and restore the manifest to add the LAUNCHERAintent to the LoginActivity
+
+
+        // restore the manifest to add the LAUNCHERAintent to the LoginActivity
         course = (Course) getIntent().getSerializableExtra("course");
-        // course = new Course("Linux+", "https://www.cybrary.it/course/comptia-linux-plus/");
 
         setTitle(course.name);
 
@@ -54,6 +57,27 @@ public class CourseActivity extends AppCompatActivity implements VideoUrlListene
         downloadVideos(course);
 
         vidView = (VideoView) findViewById(R.id.myVideo);
+
+        vidView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+                    @Override
+                    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+                                          /*
+                                           *  add media controller
+                                           */
+                        MediaController mc = new MediaController(CourseActivity.this);
+                        ;
+                        vidView.setMediaController(mc);
+                                          /*
+                                           * and set its position on screen
+                                           */
+                        mc.setAnchorView(vidView);
+                    }
+                });
+            }
+        });
    }
 
     public void initializeListView() {
@@ -77,12 +101,12 @@ public class CourseActivity extends AppCompatActivity implements VideoUrlListene
             @Override
             public void onResponse(String response) {
                 //Server replied successfully (200)
-                //Now we want to list the videos
+                //list the videos
                 ArrayList<Video> videos = new ArrayList<>();
 
                 // Videos are formatted like this:
                 // <a href="https://www.cybrary.it/video/the-bios/" class="title">BIOS &#8211; Basic Input Output System</a>
-                // We'll use a regexp to match them all in the raw HTML:
+                // use a regexp to match them all in the raw HTML:
                 Pattern p = Pattern.compile("cybrary\\.it/video/(.+)\" class=\"title\">([^\\>]+)\\<\\/a\\>");
                 Matcher m = p.matcher(response);
                 while(m.find()) {
@@ -125,7 +149,7 @@ public class CourseActivity extends AppCompatActivity implements VideoUrlListene
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //no inspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

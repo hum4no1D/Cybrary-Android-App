@@ -26,8 +26,12 @@
         </activity>
         <activity
             android:name=".CourseActivity"
-            android:parentActivityName=".CoursesListActivity"
-            android:label="@string/title_activity_videoplayer" >
+            android:label="@string/title_activity_videoplayer"
+            android:parentActivityName=".CoursesListActivity" >
+        </activity>
+        <activity
+            android:name=".FakeActivity"
+            android:label="@string/title_activity_fake" >
         </activity>
     </application>
 
