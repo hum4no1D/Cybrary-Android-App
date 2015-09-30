@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,27 +34,26 @@ public class LoginActivity extends Activity {
     EditText user,pass;
     TextView tv;
     ProgressDialog dialog = null;
+    CookieManager cookieManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        imageView.setImageResource(R.drawable.logowhite2);
 
 
-        CookieManager cookieManager = new CookieManager(((CybraryApplication) getApplication()).getCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+        cookieManager = new CookieManager(((CybraryApplication) getApplication()).getCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
 
         credentials = getSharedPreferences("credentials", Context.MODE_PRIVATE);
 
         //  Auto-login has been disabled since Cybrary removes cookies after browser is closed
         //  This behavior can easily be restored once using the API (we'll get a long-lived token)
-        /*if(credentials.contains("login")) {
+        if(credentials.contains("login")) {
             Toast.makeText(this, "Automatically logged in as " + credentials.getString("login", ""), Toast.LENGTH_SHORT).show();
             startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
             finish();
-        }*/
+        }
     }
 
     public void Log_in(View e){
