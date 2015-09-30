@@ -62,11 +62,11 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run() {
-                Log.e("ADAPTER", "Downloading video " + video.videoUrl);
+                Log.i("ADAPTER", "Downloading video " + video.videoUrl);
 
                 video.downloadForOfflineAccess();
 
-                Log.e("ADAPTER", "Downloaded video " + video.videoUrl);
+                Log.i("ADAPTER", "Downloaded video " + video.videoUrl);
                 if(dialog != null) {
                     dialog.dismiss();
                 }

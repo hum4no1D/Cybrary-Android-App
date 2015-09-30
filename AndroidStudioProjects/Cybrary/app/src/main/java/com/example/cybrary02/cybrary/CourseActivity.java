@@ -3,9 +3,7 @@ package com.example.cybrary02.cybrary;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -29,7 +27,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CourseActivity extends AppCompatActivity implements VideoUrlListener {
+public class CourseActivity extends LoggedInAbstractActivity implements VideoUrlListener {
     private ListView listView;
     private Course course;
     private VideoView vidView;
@@ -87,7 +85,16 @@ public class CourseActivity extends AppCompatActivity implements VideoUrlListene
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Video video = (Video) parent.getItemAtPosition(position);
-                video.getMp4Url(CourseActivity.this, CourseActivity.this);
+                if(video.isLocallyAvailable()) {
+                    Log.i("CourseActivity", "Video " + video.getId() + " is already available for offline use.");
+                    // Video is already available, no need to download it again.
+                    vidView.setVideoURI(Uri.parse(video.getPotentialFileName()));
+                    vidView.start();
+                }
+                else {
+                    Log.i("CourseActivity", "Now retrieving metadata for " + video.getId());
+                    video.getMp4Url(CourseActivity.this, CourseActivity.this);
+                }
             }
         });
     }
@@ -133,28 +140,6 @@ public class CourseActivity extends AppCompatActivity implements VideoUrlListene
 
         // Send the request
         queue.add(messagesRequest);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_videoplayer, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //no inspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
