@@ -1,4 +1,4 @@
-package com.example.cybrary02.cybrary.pojo;
+package com.cybrary.app.pojo;
 
 import java.io.Serializable;
 

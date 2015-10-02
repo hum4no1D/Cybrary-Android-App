@@ -1,4 +1,4 @@
-package com.example.cybrary02.cybrary;
+package com.cybrary.app;
 
 /*
  * The MIT License (MIT)
@@ -26,7 +26,6 @@ package com.example.cybrary02.cybrary;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -81,7 +80,6 @@ public class PersistentCookieStore implements CookieStore {
 
         Map<String, ?> keys = getPrefs().getAll();
         for(Map.Entry<String, ?> entry: keys.entrySet()) {
-            Log.e("WTF", "Restoring " + entry.getKey() + " to value " + entry.getValue().toString());
             Gson gson = new Gson();
             HttpCookie cookie = gson.fromJson(entry.getValue().toString(), HttpCookie.class);
             mStore.add(URI.create(cookie.getDomain()), cookie);
@@ -90,8 +88,6 @@ public class PersistentCookieStore implements CookieStore {
 
     @Override
     public void add(URI uri, HttpCookie cookie) {
-        Log.e("WTF", "Adding cookie" + cookie.getName());
-
         mStore.add(URI.create(cookie.getDomain()), cookie);
 
         Gson gson = new Gson();

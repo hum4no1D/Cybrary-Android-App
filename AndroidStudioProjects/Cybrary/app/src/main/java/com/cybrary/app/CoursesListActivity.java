@@ -1,4 +1,4 @@
-package com.example.cybrary02.cybrary;
+package com.cybrary.app;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,8 +13,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.cybrary02.cybrary.adapter.CourseAdapter;
-import com.example.cybrary02.cybrary.pojo.Course;
+import com.cybrary.app.adapter.CourseAdapter;
+import com.cybrary.app.pojo.Course;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -29,7 +29,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_courses_list);
+        setContentView(com.cybrary.app.R.layout.activity_courses_list);
 
         initializeListView();
 
@@ -84,7 +84,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
     }
 
     public void initializeListView() {
-        listView = (ListView) findViewById(R.id.listView);
+        listView = (ListView) findViewById(com.cybrary.app.R.id.listView);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

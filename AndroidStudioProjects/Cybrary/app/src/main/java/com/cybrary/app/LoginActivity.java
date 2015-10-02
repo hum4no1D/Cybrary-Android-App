@@ -1,4 +1,4 @@
-package com.example.cybrary02.cybrary;
+package com.cybrary.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;

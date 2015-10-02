@@ -1,4 +1,4 @@
-package com.example.cybrary02.cybrary;
+package com.cybrary.app;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -16,9 +16,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.cybrary02.cybrary.adapter.VideoAdapter;
-import com.example.cybrary02.cybrary.pojo.Course;
-import com.example.cybrary02.cybrary.pojo.Video;
+import com.cybrary.app.adapter.VideoAdapter;
+import com.cybrary.app.pojo.Course;
+import com.cybrary.app.pojo.Video;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;

@@ -6,7 +6,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.example.cybrary02.cybrary.CoursesListActivity"/>
+        className = "com.cybrary.app.cybrary.CoursesListActivity"/>
       <point      
         x = "1340"      
         y = "168"/>
@@ -14,7 +14,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.example.cybrary02.cybrary.CourseActivity"/>
+        className = "com.cybrary.app.cybrary.CourseActivity"/>
       <point      
         x = "816"      
         y = "172"/>
@@ -22,7 +22,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.example.cybrary02.cybrary.LoginActivity"/>
+        className = "com.cybrary.app.cybrary.LoginActivity"/>
       <point      
         x = "104"      
         y = "168"/>

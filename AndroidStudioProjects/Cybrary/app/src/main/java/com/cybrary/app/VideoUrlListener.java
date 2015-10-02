@@ -1,6 +1,6 @@
-package com.example.cybrary02.cybrary;
+package com.cybrary.app;
 
-import com.example.cybrary02.cybrary.pojo.Video;
+import com.cybrary.app.pojo.Video;
 
 /**
  * Created by cybrary02 on 9/24/15.

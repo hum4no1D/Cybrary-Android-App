@@ -1,4 +1,4 @@
-package com.example.cybrary02.cybrary.adapter;
+package com.cybrary.app.adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,9 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.cybrary02.cybrary.R;
-import com.example.cybrary02.cybrary.VideoUrlListener;
-import com.example.cybrary02.cybrary.pojo.Video;
+import com.cybrary.app.R;
+import com.cybrary.app.VideoUrlListener;
+import com.cybrary.app.pojo.Video;
 
 import java.util.ArrayList;
 

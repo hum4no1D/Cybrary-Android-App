@@ -1,4 +1,4 @@
-package com.example.cybrary02.cybrary.pojo;
+package com.cybrary.app.pojo;
 
 import android.content.Context;
 import android.os.Environment;
@@ -11,7 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.cybrary02.cybrary.VideoUrlListener;
+import com.cybrary.app.VideoUrlListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
