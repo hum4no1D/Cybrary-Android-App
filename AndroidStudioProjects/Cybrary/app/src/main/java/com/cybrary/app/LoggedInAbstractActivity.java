@@ -40,6 +40,17 @@ public abstract class LoggedInAbstractActivity extends AppCompatActivity {
             startActivity(forumIntent);
             return true;
         }
+        else if(id == R.id.action_rate) {
+
+            Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.cybrary.app");
+            Intent gotoMarket = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(gotoMarket);
+        }else if(id == R.id.action_jobs) {
+
+            Intent jobsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/cyber-security-jobs/"));
+            startActivity(jobsIntent);
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

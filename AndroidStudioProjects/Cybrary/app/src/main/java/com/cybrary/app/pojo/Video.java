@@ -49,6 +49,13 @@ public class Video {
         return Environment.getExternalStorageDirectory() + "/cybrary-" + getId() + ".mp4";
     }
 
+    public void removeLocalCopy() {
+        if(this.isLocallyAvailable()) {
+            File f = new File(getPotentialFileName());
+            f.delete();
+        }
+    }
+
     public boolean isLocallyAvailable() {
         File f = new File(getPotentialFileName());
         return f.exists();
@@ -81,6 +88,7 @@ public class Video {
             java.io.BufferedInputStream in = new java.io.BufferedInputStream(new java.net.URL(videoUrl).openStream());
             java.io.FileOutputStream fos = new java.io.FileOutputStream(fileName);
             java.io.BufferedOutputStream bout = new BufferedOutputStream(fos,1024);
+
             byte[] data = new byte[1024];
             int x=0;
             while((x=in.read(data,0,1024))>=0){

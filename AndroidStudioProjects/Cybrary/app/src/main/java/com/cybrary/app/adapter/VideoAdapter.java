@@ -38,6 +38,8 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
         messageName.setText(Html.fromHtml(video.name));
 
         final ImageView downloadButton = (ImageView) convertView.findViewById(R.id.downloadButton);
+        final ImageView deleteButton = (ImageView) convertView.findViewById(R.id.deleteButton);
+
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,10 +48,26 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
                         "Downloading. Please wait...", true);
                 dialog.show();
                 video.getMp4Url(getContext(), VideoAdapter.this);
+                downloadButton.setVisibility(View.INVISIBLE);
+                deleteButton.setVisibility(View.VISIBLE);
             }
         });
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                video.removeLocalCopy();
+                downloadButton.setVisibility(View.VISIBLE);
+                deleteButton.setVisibility(View.INVISIBLE);
+            }
+        });
+
         if(video.isLocallyAvailable()) {
             downloadButton.setVisibility(View.INVISIBLE);
+            deleteButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            downloadButton.setVisibility(View.VISIBLE);
+            deleteButton.setVisibility(View.INVISIBLE);
         }
 
         // Return the completed view to render on screen

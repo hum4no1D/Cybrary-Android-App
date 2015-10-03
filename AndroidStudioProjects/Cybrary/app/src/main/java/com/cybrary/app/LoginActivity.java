@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,6 +55,11 @@ public class LoginActivity extends Activity {
             startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
             finish();
         }
+
+        user = (EditText)findViewById(R.id.Login);
+        Typeface batman = Typeface.createFromAsset(getAssets(), "batman.ttf");
+        user.setTypeface(batman);
+
     }
 
     public void Log_in(View e){
