@@ -3,9 +3,9 @@ package com.cybrary.app;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,11 +20,15 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+
 public class CoursesListActivity extends LoggedInAbstractActivity {
-    private ListView listView;
+    private StickyListHeadersListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,17 +61,55 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
                 //Now we want to list the available courses
                 ArrayList<Course> courses = new ArrayList<>();
 
+                //  Retrieve all categories content
+                Pattern blocksPattern = Pattern.compile("<h6.+?<\\/div\\>", Pattern.DOTALL);
+
+                // Titles are formatted like this:
+                // <h6 class="bmfont"><a title="Systems Administration" href="http://www.cybrary.it/systems-administration/">Systems Administration</a></h6>
+                Pattern titlePattern = Pattern.compile("h6.+a title.+\\>([^\\>]+)\\<\\/a\\>");
+
                 // Courses are formatted like this:
                 // <li><a href="http://www.cybrary.it/course/ccna/">CCNA</a></li>
                 // We'll use a regexp to match them all in the raw HTML:
-                Pattern p = Pattern.compile("cybrary\\.it/course/(.+)\">([^\\>]+)\\<\\/a\\>\\<\\/li\\>");
-                Matcher m = p.matcher(response);
-                while(m.find()) {
-                    String url = "https://www.cybrary.it/course/" + m.group(1);
-                    String name = m.group(2);
-                    Course course = new Course(name, url);
-                    courses.add(course);
+                Pattern coursePattern = Pattern.compile("cybrary\\.it/course/(.+)\">([^\\>]+)\\<\\/a\\>\\<\\/li\\>");
+
+                Matcher blockMatcher = blocksPattern.matcher(response);
+                while(blockMatcher.find()) {
+                    //  For each category block
+                    //  Extract category title
+                    String block = blockMatcher.group(0);
+
+                    String currentCategory = "Unknown category";
+
+                    Matcher titleMatcher = titlePattern.matcher(block);
+                    while(titleMatcher.find()) {
+                        currentCategory = titleMatcher.group(1);
+                    }
+
+                    Log.e("WTF", "Extracting courses for category" + currentCategory);
+                    //  And extract all courses
+                    Matcher courseMatcher = coursePattern.matcher(block);
+                    while(courseMatcher.find()) {
+                        String url = "https://www.cybrary.it/course/" + courseMatcher.group(1);
+                        String name = courseMatcher.group(2);
+                        Course course = new Course(name, url, currentCategory);
+                        courses.add(course);
+                    }
                 }
+
+                //  Order courses by category first, then by name
+                Collections.sort(courses, new Comparator<Course>() {
+                    @Override
+                    public int compare(Course lhs, Course rhs) {
+                        int categoryOrdering = lhs.category.compareTo(rhs.category);
+                        if(categoryOrdering != 0) {
+                            return categoryOrdering;
+                        }
+
+                        //  Same categories for both courses, order them by name
+                        return lhs.name.compareTo(rhs.name);
+                    }
+                });
 
                 listView.setAdapter(new CourseAdapter(CoursesListActivity.this, courses));
             }
@@ -84,7 +126,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
     }
 
     public void initializeListView() {
-        listView = (ListView) findViewById(com.cybrary.app.R.id.listView);
+        listView = (StickyListHeadersListView) findViewById(com.cybrary.app.R.id.listView);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

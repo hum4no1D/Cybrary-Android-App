@@ -13,8 +13,26 @@ import com.cybrary.app.pojo.Course;
 
 import java.util.ArrayList;
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
-public class CourseAdapter extends ArrayAdapter<Course> {
+
+public class CourseAdapter extends ArrayAdapter<Course> implements StickyListHeadersAdapter {
+    @Override
+    public View getHeaderView(int i, View convertView, ViewGroup parent) {
+        if(convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_course_header, parent, false);
+        }
+
+        String category = getItem(i).category;
+        ((TextView) convertView.findViewById(R.id.section_header)).setText(category);
+        return convertView;
+    }
+
+    @Override
+    public long getHeaderId(int i) {
+        return getItem(i).category.hashCode();
+    }
+
     public CourseAdapter(Context context, ArrayList<Course> courses) {
         super(context, 0, courses);
     }
