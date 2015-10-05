@@ -9,11 +9,10 @@ import android.widget.AdapterView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybrary.app.adapter.CourseAdapter;
+import com.cybrary.app.listener.CachedResponseListener;
 import com.cybrary.app.pojo.Course;
 
 import java.net.CookieHandler;
@@ -48,9 +47,11 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
         // Creating a new Volley HTTP POST request
         String reqUrl = "https://www.cybrary.it/courses";
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, new Response.Listener<String>() {
+
+        CachedResponseListener responseListener = new CachedResponseListener(this, reqUrl) {
             @Override
             public void onResponse(String response) {
+                super.onResponse(response);
                 if(!response.contains(getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "UNKNOWNUSER"))) {
                     //We've been logged out!
                     logOut();
@@ -113,13 +114,9 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
 
                 listView.setAdapter(new CourseAdapter(CoursesListActivity.this, courses));
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //Some server error, or no network connectivity
-                error.printStackTrace();
-            }
-        });
+        };
+
+        StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, responseListener, responseListener);
 
         // Send the request
         queue.add(messagesRequest);

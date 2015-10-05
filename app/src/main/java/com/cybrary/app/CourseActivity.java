@@ -12,11 +12,10 @@ import android.widget.VideoView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybrary.app.adapter.VideoAdapter;
+import com.cybrary.app.listener.CachedResponseListener;
 import com.cybrary.app.pojo.Course;
 import com.cybrary.app.pojo.Video;
 
@@ -104,9 +103,10 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         // Creating a new Volley HTTP GET request
         String reqUrl = course.url;
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, new Response.Listener<String>() {
+        final CachedResponseListener responseListener = new CachedResponseListener(this, reqUrl) {
             @Override
             public void onResponse(String response) {
+                super.onResponse(response);
                 //Server replied successfully (200)
                 //list the videos
                 ArrayList<Video> videos = new ArrayList<>();
@@ -130,13 +130,8 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
                     videos.get(0).getMp4Url(CourseActivity.this, CourseActivity.this);
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //Some server error, or no network connectivity
-                error.printStackTrace();
-            }
-        });
+        };
+        StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, responseListener, responseListener);
 
         // Send the request
         queue.add(messagesRequest);
