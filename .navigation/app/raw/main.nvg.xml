@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigationModel
+  ns = "http://schemas.android.com?import=com.android.tools.idea.editors.navigation.model.*">
+  <locations  
+    class = "java.util.ArrayList">
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.cybrary.app.cybrary.CoursesListActivity"/>
+      <point      
+        x = "1340"      
+        y = "168"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.cybrary.app.cybrary.CourseActivity"/>
+      <point      
+        x = "816"      
+        y = "172"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.cybrary.app.cybrary.LoginActivity"/>
+      <point      
+        x = "104"      
+        y = "168"/>
+    </statePointEntry>
+  </locations>
+</navigationModel>
