@@ -1,5 +1,7 @@
 package com.cybrary.app.pojo;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
@@ -76,7 +78,7 @@ public class Video {
         retrieveVimeoUrl(context, listener);
     }
 
-    public boolean downloadForOfflineAccess() {
+    public boolean downloadForOfflineAccess(Activity activity, final ProgressDialog dialog) {
         if(videoUrl == null) {
             throw new RuntimeException("You need to call getMp4Url() before");
         }
@@ -90,9 +92,13 @@ public class Video {
             java.io.BufferedOutputStream bout = new BufferedOutputStream(fos,1024);
 
             byte[] data = new byte[1024];
-            int x=0;
+            int x = 0;
+            int count = 0;
             while((x=in.read(data,0,1024))>=0){
-                bout.write(data,0,x);
+                bout.write(data, 0, x);
+
+                count += x;
+                notifyProgress(activity, dialog, count);
             }
             fos.flush();
             bout.flush();
@@ -108,6 +114,20 @@ public class Video {
         }
 
         return true;
+    }
+
+    private void notifyProgress(Activity activity, final ProgressDialog dialog, final int x) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(x / 1024 < 1024) {
+                     dialog.setMessage("Downloaded " + ((int) x / 1024) + "kb.");
+                }
+                else {
+                    dialog.setMessage("Downloaded " + ((int) (x / 1024 / 1024)) + "mb.");
+                }
+            }
+        });
     }
 
     private void downloadVideoMetadata(final Context context, final VideoUrlListener listener) {

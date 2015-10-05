@@ -1,7 +1,7 @@
 package com.cybrary.app.adapter;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,9 +20,11 @@ import java.util.ArrayList;
 
 public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListener {
     private ProgressDialog dialog;
+    private Activity parent;
 
-    public VideoAdapter(Context context, ArrayList<Video> videos) {
+    public VideoAdapter(Activity context, ArrayList<Video> videos) {
         super(context, 0, videos);
+        this.parent = context;
     }
 
     @Override
@@ -82,7 +84,7 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
             public void run() {
                 Log.i("ADAPTER", "Downloading video " + video.videoUrl);
 
-                video.downloadForOfflineAccess();
+                video.downloadForOfflineAccess(parent, dialog);
 
                 Log.i("ADAPTER", "Downloaded video " + video.videoUrl);
                 if(dialog != null) {
