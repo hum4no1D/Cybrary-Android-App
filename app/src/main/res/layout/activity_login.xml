@@ -35,7 +35,6 @@
             android:hint="username"
             android:singleLine="true"
             android:maxLines="1"
-            android:text="jt3355"
             android:padding="3dp"
             android:background="#f3f1ff" />
 
@@ -53,7 +52,6 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:maxLines="1"
-            android:text="investingwood33"
             android:hint="password"
             android:password="true"
             android:padding="3dp"

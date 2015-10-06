@@ -2,13 +2,13 @@
     <string name="app_name">Cybrary</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_signout">Sign out</string>
-    <string name="action_forum">Access Cybrary Forums</string>
-    <string name="action_support">Get Cybrary Support</string>
-    <string name="action_rate">Rate the app</string>
+    <string name="action_signout">Sign Out</string>
+    <string name="action_forum">Discussion Forums</string>
+    <string name="action_support">Support</string>
+    <string name="action_rate">Rate the App</string>
     <string name="title_activity_list">Courses</string>
     <string name="title_activity_videoplayer">Course detail</string>
-    <string name="action_jobs">CyberSecurity Jobs</string>
+    <string name="action_jobs">Cyber Security Jobs</string>
 
 
 </resources>

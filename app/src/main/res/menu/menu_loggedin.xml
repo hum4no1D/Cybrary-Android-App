@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
     <item android:id="@+id/action_rate" android:title="@string/action_rate"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_support" android:title="@string/action_support"
+    <item android:id="@+id/action_jobs" android:title="@string/action_jobs"
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_forum" android:title="@string/action_forum"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_signout" android:title="@string/action_signout"
+    <item android:id="@+id/action_support" android:title="@string/action_support"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_jobs" android:title="@string/action_jobs"
+    <item android:id="@+id/action_signout" android:title="@string/action_signout"
         android:orderInCategory="100" app:showAsAction="never" />
 
 </menu>
