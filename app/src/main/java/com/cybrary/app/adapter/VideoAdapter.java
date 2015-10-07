@@ -2,6 +2,8 @@ package com.cybrary.app.adapter;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +21,8 @@ import java.util.ArrayList;
 
 
 public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListener {
+    public final static String PREFERENCE_TAG = "videoStore";
+
     private ProgressDialog dialog;
     private Activity parent;
 
@@ -87,6 +91,12 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
                 video.downloadForOfflineAccess(parent, dialog);
 
                 Log.i("ADAPTER", "Downloaded video " + video.videoUrl);
+
+                SharedPreferences downloadedVideos = getContext().getSharedPreferences(PREFERENCE_TAG, Context.MODE_PRIVATE);
+                String currentVideos = downloadedVideos.getString("videos", "");
+                currentVideos += "|" + video.getPotentialFileName();
+                downloadedVideos.edit().putString("videos", currentVideos).apply();
+
                 if(dialog != null) {
                     dialog.dismiss();
                 }

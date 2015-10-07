@@ -6,6 +6,7 @@
     <string name="action_forum">Discussion Forums</string>
     <string name="action_support">Support</string>
     <string name="action_rate">Rate the App</string>
+    <string name="action_settings">Settings</string>
     <string name="title_activity_list">Courses</string>
     <string name="title_activity_videoplayer">Course detail</string>
     <string name="action_jobs">Cyber Security Jobs</string>

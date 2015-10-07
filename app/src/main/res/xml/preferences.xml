@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="Settings">
+    <PreferenceCategory android:title="Offline management">
+        <com.cybrary.app.preference.ResetPreference
+            android:dialogMessage="Do you really want to reset your history?"
+            android:key="reset"
+            android:summary="Remove all offline videos"
+            android:title="Clean offline storage">
+        </com.cybrary.app.preference.ResetPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Video settings">
+        <ListPreference
+            android:defaultValue="sd"
+            android:entries="@array/qualityEntries"
+            android:entryValues="@array/qualityValues"
+            android:key="quality"
+            android:summary="Pick video quality depending on your Internet connection"
+            android:title="Video quality"/>
+    </PreferenceCategory>
+</PreferenceScreen>

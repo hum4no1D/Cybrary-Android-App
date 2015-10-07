@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -156,7 +157,10 @@ public class Video {
                 while(m.find()) {
                     try {
                         vimeoMetadata = new JSONObject(m.group(1));
-                        videoUrl = vimeoMetadata.getJSONObject("request").getJSONObject("files").getJSONObject("h264").getJSONObject("sd").getString("url");
+
+                        String quality = PreferenceManager.getDefaultSharedPreferences(context).getString("quality", "sd");
+                        Log.i("Video", "Downloading video with quality " + quality);
+                        videoUrl = vimeoMetadata.getJSONObject("request").getJSONObject("files").getJSONObject("h264").getJSONObject(quality).getString("url");
                     }
                     catch(JSONException e) {
                         e.printStackTrace();

@@ -45,10 +45,14 @@ public abstract class LoggedInAbstractActivity extends AppCompatActivity {
             Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.cybrary.app");
             Intent gotoMarket = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(gotoMarket);
-        }else if(id == R.id.action_jobs) {
-
+        }
+        else if(id == R.id.action_jobs) {
             Intent jobsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/cyber-security-jobs/"));
             startActivity(jobsIntent);
+            return true;
+        }
+        else if(id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 
