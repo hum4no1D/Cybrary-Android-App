@@ -9,11 +9,17 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <VideoView
-        android:id="@+id/myVideo"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_height="200dp"/>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:gravity="center_horizontal"
+        android:id="@+id/videoWrapper"
+        android:layout_height="200dp">
+        <VideoView
+            android:id="@+id/myVideo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
 
     <TextView
         android:layout_width="wrap_content"

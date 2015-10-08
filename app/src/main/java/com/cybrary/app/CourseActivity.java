@@ -1,13 +1,17 @@
 package com.cybrary.app;
 
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import com.android.volley.Request;
@@ -75,6 +79,9 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
                 });
             }
         });
+
+        //  Switch layouts according to landscape / portrait
+        onConfigurationChanged(getResources().getConfiguration());
    }
 
     public void initializeListView() {
@@ -84,18 +91,37 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Video video = (Video) parent.getItemAtPosition(position);
-                if(video.isLocallyAvailable()) {
+                if (video.isLocallyAvailable()) {
                     Log.i("CourseActivity", "Video " + video.getId() + " is already available for offline use.");
                     // Video is already available, no need to download it again.
                     vidView.setVideoURI(Uri.parse(video.getPotentialFileName()));
                     vidView.start();
-                }
-                else {
+                } else {
                     Log.i("CourseActivity", "Now retrieving metadata for " + video.getId());
                     video.getMp4Url(CourseActivity.this, CourseActivity.this);
                 }
             }
         });
+    }
+
+    public void onConfigurationChanged (Configuration newConfig) {
+        View videoPlayer = findViewById(R.id.videoWrapper);
+        Log.e("WTF", "onConfigurationChanged()");
+
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Log.e("WTF", "Switching orientation to landscape");
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            videoPlayer.setLayoutParams(lp);
+        }
+        else {
+            Log.e("WTF", "Switching orientation to portrait");
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
+            lp.weight = 1.0f;
+            lp.gravity = Gravity.CENTER_HORIZONTAL;
+            videoPlayer.setLayoutParams(lp);
+        }
+
+        super.onConfigurationChanged(newConfig);
     }
 
     public void downloadVideos(Course course) {
