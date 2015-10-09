@@ -36,12 +36,13 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
     private int currentVideoIndex = -1;
     private VideoView vidView;
 
+    private View next;
+    private View prev;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
-
-
 
         // restore the manifest to add the LAUNCHERAintent to the LoginActivity
         course = (Course) getIntent().getSerializableExtra("course");
@@ -81,19 +82,32 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
             }
         });
 
+        vidView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                Log.e("WTF", "Finished playback");
+                moveToVideo(1);
+            }
+        });
+
         //  Switch layouts according to landscape / portrait
         onConfigurationChanged(getResources().getConfiguration());
 
-        findViewById(R.id.next_video).setOnClickListener(new View.OnClickListener() {
+        next = findViewById(R.id.next_video);
+        prev = findViewById(R.id.prev_video);
+
+        next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(currentVideoIndex != -1) {
-                    Video next = (Video) listView.getAdapter().getItem(currentVideoIndex + 1);
-                    if (next != null) {
-                        currentVideoIndex += 1;
-                        next.getMp4Url(CourseActivity.this, CourseActivity.this);
-                    }
-                }
+                moveToVideo(1);
+            }
+        });
+
+
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToVideo(-1);
             }
         });
    }
@@ -105,6 +119,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Video video = (Video) parent.getItemAtPosition(position);
+                currentVideoIndex = position;
                 if (video.isLocallyAvailable()) {
                     Log.i("CourseActivity", "Video " + video.getId() + " is already available for offline use.");
                     // Video is already available, no need to download it again.
@@ -118,26 +133,33 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         });
     }
 
+    public boolean canPlayVideo(int delta) {
+        return currentVideoIndex + delta >= 0 && currentVideoIndex + delta < listView.getAdapter().getCount();
+    }
+    public void moveToVideo(int delta) {
+        Log.e("WTF", "MOVE  TO  VIDEO " + currentVideoIndex + " delta " + delta);
+        if(canPlayVideo(delta)) {
+            currentVideoIndex += delta;
+            Video next = (Video) listView.getAdapter().getItem(currentVideoIndex);
+            next.getMp4Url(CourseActivity.this, CourseActivity.this);
+        }
+
+        prev.setVisibility(canPlayVideo(-1) ? View.VISIBLE : View.INVISIBLE);
+        next.setVisibility(canPlayVideo(1) ? View.VISIBLE : View.INVISIBLE);
+    }
+
     public void onConfigurationChanged (Configuration newConfig) {
         View videoPlayer = findViewById(R.id.videoWrapper);
-        Log.e("WTF", "onConfigurationChanged()");
 
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Log.e("WTF", "Switching orientation to landscape");
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             videoPlayer.setLayoutParams(lp);
-
-
-
         }
         else {
-            Log.e("WTF", "Switching orientation to portrait");
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
             lp.weight = 1.0f;
             lp.gravity = Gravity.CENTER_HORIZONTAL;
             videoPlayer.setLayoutParams(lp);
-
-
         }
 
         super.onConfigurationChanged(newConfig);
@@ -172,8 +194,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
 
                 // Play the first video automatically
                 if(videos.size() > 0) {
-                    currentVideoIndex = 0;
-                    videos.get(0).getMp4Url(CourseActivity.this, CourseActivity.this);
+                    moveToVideo(1);
                 }
             }
         };
