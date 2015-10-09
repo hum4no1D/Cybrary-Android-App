@@ -1,10 +1,13 @@
 package com.cybrary.app;
 
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -85,7 +88,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         vidView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                Log.e("WTF", "Finished playback");
+                Log.i("Video", "Finished playback");
                 moveToVideo(1);
             }
         });
@@ -137,7 +140,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         return currentVideoIndex + delta >= 0 && currentVideoIndex + delta < listView.getAdapter().getCount();
     }
     public void moveToVideo(int delta) {
-        Log.e("WTF", "MOVE  TO  VIDEO " + currentVideoIndex + " delta " + delta);
+        Log.e("CourseActivity", "Trying to move to video " + currentVideoIndex + " delta " + delta);
         if(canPlayVideo(delta)) {
             currentVideoIndex += delta;
             Video next = (Video) listView.getAdapter().getItem(currentVideoIndex);
@@ -154,12 +157,20 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             videoPlayer.setLayoutParams(lp);
+            getSupportActionBar().hide();
+            getWindow().getDecorView().setBackgroundColor(Color.BLACK);
         }
         else {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
             lp.weight = 1.0f;
             lp.gravity = Gravity.CENTER_HORIZONTAL;
             videoPlayer.setLayoutParams(lp);
+            getSupportActionBar().show();
+            TypedValue typedValue = new TypedValue();
+            Resources.Theme theme = getTheme();
+            theme.resolveAttribute(android.R.attr.colorBackground, typedValue, true);
+            int color = typedValue.data;
+            getWindow().getDecorView().setBackgroundColor(color);
         }
 
         super.onConfigurationChanged(newConfig);
