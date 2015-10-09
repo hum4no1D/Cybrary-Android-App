@@ -29,7 +29,8 @@
             android:name=".CourseActivity"
             android:label="@string/title_activity_videoplayer"
             android:configChanges="orientation|screenSize"
-            android:parentActivityName=".CoursesListActivity" >
+            android:parentActivityName=".CoursesListActivity"
+            >
         </activity>
         <activity
             android:name=".SettingsActivity"

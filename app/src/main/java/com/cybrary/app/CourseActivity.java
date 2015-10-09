@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 public class CourseActivity extends LoggedInAbstractActivity implements VideoUrlListener {
     private ListView listView;
     private Course course;
+    private int currentVideoIndex = -1;
     private VideoView vidView;
 
     @Override
@@ -82,6 +83,19 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
 
         //  Switch layouts according to landscape / portrait
         onConfigurationChanged(getResources().getConfiguration());
+
+        findViewById(R.id.next_video).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(currentVideoIndex != -1) {
+                    Video next = (Video) listView.getAdapter().getItem(currentVideoIndex + 1);
+                    if (next != null) {
+                        currentVideoIndex += 1;
+                        next.getMp4Url(CourseActivity.this, CourseActivity.this);
+                    }
+                }
+            }
+        });
    }
 
     public void initializeListView() {
@@ -112,6 +126,9 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
             Log.e("WTF", "Switching orientation to landscape");
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             videoPlayer.setLayoutParams(lp);
+
+
+
         }
         else {
             Log.e("WTF", "Switching orientation to portrait");
@@ -119,6 +136,8 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
             lp.weight = 1.0f;
             lp.gravity = Gravity.CENTER_HORIZONTAL;
             videoPlayer.setLayoutParams(lp);
+
+
         }
 
         super.onConfigurationChanged(newConfig);
@@ -153,6 +172,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
 
                 // Play the first video automatically
                 if(videos.size() > 0) {
+                    currentVideoIndex = 0;
                     videos.get(0).getMp4Url(CourseActivity.this, CourseActivity.this);
                 }
             }
