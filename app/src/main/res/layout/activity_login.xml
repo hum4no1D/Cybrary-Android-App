@@ -36,7 +36,8 @@
             android:singleLine="true"
             android:maxLines="1"
             android:padding="3dp"
-            android:background="#f3f1ff" />
+            android:background="#f3f1ff"
+            android:textSize="20dp" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -55,7 +56,8 @@
             android:hint="password"
             android:password="true"
             android:padding="3dp"
-            android:background="#fffbff" />
+            android:background="#fffbff"
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/login_button"

@@ -69,7 +69,7 @@ public class LoginActivity extends Activity {
         dialog = ProgressDialog.show(LoginActivity.this, "", "Validating user...", true);
 
         String reqUrl = "https://www.cybrary.it/wp-login.php";
-        final String log = user.getText().toString().trim();
+        final String log = user.getText().toString().trim().toLowerCase();
         final String pwd = pass.getText().toString().trim();
 
         if(log.isEmpty() || pwd.isEmpty()) {

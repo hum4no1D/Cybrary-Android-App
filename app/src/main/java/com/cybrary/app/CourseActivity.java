@@ -221,4 +221,19 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         vidView.setVideoURI(vidUri);
         vidView.start();
     }
+
+    /*
+     * Pause current video
+     */
+    public void pauseVideo() {
+        vidView.pause();
+    }
+
+
+    /*
+     * Play current video
+     */
+    public void playVideo() {
+        vidView.resume();
+    }
 }

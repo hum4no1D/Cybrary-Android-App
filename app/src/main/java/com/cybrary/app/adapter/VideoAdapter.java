@@ -1,6 +1,5 @@
 package com.cybrary.app.adapter;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cybrary.app.CourseActivity;
 import com.cybrary.app.R;
 import com.cybrary.app.VideoUrlListener;
 import com.cybrary.app.pojo.Video;
@@ -24,9 +24,9 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
     public final static String PREFERENCE_TAG = "videoStore";
 
     private ProgressDialog dialog;
-    private Activity parent;
+    private CourseActivity parent;
 
-    public VideoAdapter(Activity context, ArrayList<Video> videos) {
+    public VideoAdapter(CourseActivity context, ArrayList<Video> videos) {
         super(context, 0, videos);
         this.parent = context;
     }
@@ -53,6 +53,7 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
                 dialog = ProgressDialog.show(getContext(), "Downloading video",
                         "Downloading. Please wait...", true);
                 dialog.show();
+                VideoAdapter.this.parent.pauseVideo();
                 video.getMp4Url(getContext(), VideoAdapter.this);
                 downloadButton.setVisibility(View.INVISIBLE);
                 deleteButton.setVisibility(View.VISIBLE);

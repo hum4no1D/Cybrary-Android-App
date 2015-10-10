@@ -54,6 +54,11 @@ public abstract class LoggedInAbstractActivity extends AppCompatActivity {
         else if(id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
+        }else if(id == R.id.action_profile) {
+            String login = getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "");
+            Intent jobsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/wp-login.php?redirect_to=https%3A%2F%2Fwww.cybrary.it%2Fmembers%2F" + login));
+            startActivity(jobsIntent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
