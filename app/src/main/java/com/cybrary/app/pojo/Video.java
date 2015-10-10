@@ -40,6 +40,8 @@ public class Video {
     public JSONObject vimeoMetadata = null;
     public String videoUrl = null;
 
+    public Boolean isDownloading = false;
+
     /*
      * Returns an id identifying this video among others, using the URL hashcode.
      * This id can be used to check if the video is already available in the cache
@@ -79,7 +81,7 @@ public class Video {
         retrieveVimeoUrl(context, listener);
     }
 
-    public boolean downloadForOfflineAccess(Activity activity, final ProgressDialog dialog) {
+    public boolean downloadForOfflineAccess(Activity activity) {
         if(videoUrl == null) {
             throw new RuntimeException("You need to call getMp4Url() before");
         }
@@ -99,7 +101,7 @@ public class Video {
                 bout.write(data, 0, x);
 
                 count += x;
-                notifyProgress(activity, dialog, count);
+                //  notifyProgress(activity);
             }
             fos.flush();
             bout.flush();

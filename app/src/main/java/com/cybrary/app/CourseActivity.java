@@ -140,7 +140,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         return currentVideoIndex + delta >= 0 && currentVideoIndex + delta < listView.getAdapter().getCount();
     }
     public void moveToVideo(int delta) {
-        Log.e("CourseActivity", "Trying to move to video " + currentVideoIndex + " delta " + delta);
+        Log.i("CourseActivity", "Trying to move to video " + currentVideoIndex + " delta " + delta);
         if(canPlayVideo(delta)) {
             currentVideoIndex += delta;
             Video next = (Video) listView.getAdapter().getItem(currentVideoIndex);

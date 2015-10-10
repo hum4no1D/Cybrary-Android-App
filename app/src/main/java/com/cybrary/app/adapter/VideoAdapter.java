@@ -1,6 +1,5 @@
 package com.cybrary.app.adapter;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.Html;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cybrary.app.CourseActivity;
@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListener {
     public final static String PREFERENCE_TAG = "videoStore";
 
-    private ProgressDialog dialog;
     private CourseActivity parent;
 
     public VideoAdapter(CourseActivity context, ArrayList<Video> videos) {
@@ -40,23 +39,24 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_video, parent, false);
         }
 
+        final View videoView = convertView;
+
         TextView messageName = (TextView) convertView.findViewById(R.id.video_name);
         messageName.setText(Html.fromHtml(video.name));
 
         final ImageView downloadButton = (ImageView) convertView.findViewById(R.id.downloadButton);
         final ImageView deleteButton = (ImageView) convertView.findViewById(R.id.deleteButton);
+        final ProgressBar downloadProgress = (ProgressBar) convertView.findViewById(R.id.downloadProgress);
 
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //The user wants to download the video
-                dialog = ProgressDialog.show(getContext(), "Downloading video",
-                        "Downloading. Please wait...", true);
-                dialog.show();
-                VideoAdapter.this.parent.pauseVideo();
                 video.getMp4Url(getContext(), VideoAdapter.this);
+                video.isDownloading = true;
                 downloadButton.setVisibility(View.INVISIBLE);
-                deleteButton.setVisibility(View.VISIBLE);
+                downloadProgress.setVisibility(View.VISIBLE);
+                // deleteButton.setVisibility(View.VISIBLE);
             }
         });
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -68,13 +68,24 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
             }
         });
 
-        if(video.isLocallyAvailable()) {
+        if(video.isLocallyAvailable() && !video.isDownloading) {
+            // Video can be played offline
             downloadButton.setVisibility(View.INVISIBLE);
             deleteButton.setVisibility(View.VISIBLE);
+            downloadProgress.setVisibility(View.INVISIBLE);
         }
-        else {
+        else if(!video.isDownloading){
+            //  Video can't be played offline
             downloadButton.setVisibility(View.VISIBLE);
             deleteButton.setVisibility(View.INVISIBLE);
+            downloadProgress.setVisibility(View.INVISIBLE);
+
+        }
+        else {
+            //  Video is currently downloading
+            downloadProgress.setVisibility(View.VISIBLE);
+            deleteButton.setVisibility(View.INVISIBLE);
+            downloadButton.setVisibility(View.INVISIBLE);
         }
 
         // Return the completed view to render on screen
@@ -89,7 +100,7 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
             public void run() {
                 Log.i("ADAPTER", "Downloading video " + video.videoUrl);
 
-                video.downloadForOfflineAccess(parent, dialog);
+                video.downloadForOfflineAccess(parent);
 
                 Log.i("ADAPTER", "Downloaded video " + video.videoUrl);
 
@@ -98,9 +109,14 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
                 currentVideos += "|" + video.getPotentialFileName();
                 downloadedVideos.edit().putString("videos", currentVideos).apply();
 
-                if(dialog != null) {
-                    dialog.dismiss();
-                }
+                video.isDownloading = false;
+                parent.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+
             }
         });
 
