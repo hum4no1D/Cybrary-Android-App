@@ -1,11 +1,11 @@
 package com.cybrary.app.pojo;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.BaseAdapter;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -21,6 +21,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,6 +43,7 @@ public class Video {
     public String videoUrl = null;
 
     public Boolean isDownloading = false;
+    public int downloadProgress = 0;
 
     /*
      * Returns an id identifying this video among others, using the URL hashcode.
@@ -81,7 +84,7 @@ public class Video {
         retrieveVimeoUrl(context, listener);
     }
 
-    public boolean downloadForOfflineAccess(Activity activity) {
+    public boolean downloadForOfflineAccess(final BaseAdapter adapter, Activity parent) {
         if(videoUrl == null) {
             throw new RuntimeException("You need to call getMp4Url() before");
         }
@@ -90,7 +93,14 @@ public class Video {
         String fileName = getPotentialFileName();
 
         try {
-            java.io.BufferedInputStream in = new java.io.BufferedInputStream(new java.net.URL(videoUrl).openStream());
+
+            URL url = new URL(videoUrl);
+            URLConnection connection = url.openConnection();
+            connection.connect();
+
+            int totalLength = connection.getContentLength();
+
+            java.io.BufferedInputStream in = new java.io.BufferedInputStream(url.openStream());
             java.io.FileOutputStream fos = new java.io.FileOutputStream(fileName);
             java.io.BufferedOutputStream bout = new BufferedOutputStream(fos,1024);
 
@@ -101,7 +111,20 @@ public class Video {
                 bout.write(data, 0, x);
 
                 count += x;
-                //  notifyProgress(activity);
+
+                int progress = 100 * count / totalLength;
+
+                if(progress > downloadProgress + 1 ) {
+                    Log.d("Video", "Downloading, current: " + count + " of " + totalLength + "==>" + progress);
+
+                    downloadProgress = progress;
+                    parent.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
             }
             fos.flush();
             bout.flush();
@@ -117,20 +140,6 @@ public class Video {
         }
 
         return true;
-    }
-
-    private void notifyProgress(Activity activity, final ProgressDialog dialog, final int x) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(x / 1024 < 1024) {
-                     dialog.setMessage("Downloaded " + ((int) x / 1024) + "kb.");
-                }
-                else {
-                    dialog.setMessage("Downloaded " + ((int) (x / 1024 / 1024)) + "mb.");
-                }
-            }
-        });
     }
 
     private void downloadVideoMetadata(final Context context, final VideoUrlListener listener) {

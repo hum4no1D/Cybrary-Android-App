@@ -11,8 +11,9 @@
         android:text="Sample video"
         android:id="@+id/video_name"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/downloadButton"
-        android:layout_toStartOf="@+id/downloadButton" />
+        android:layout_toStartOf="@+id/downloadProgress"
+        android:layout_alignTop="@+id/downloadProgress"
+        android:layout_toLeftOf="@+id/downloadProgress" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -36,13 +37,14 @@
         android:layout_alignParentEnd="true" />
 
     <ProgressBar
-        style="?android:attr/progressBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
         android:id="@+id/downloadProgress"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:visibility="gone"
-        android:indeterminate="true"/>
+        android:indeterminate="false"
+        android:visibility="invisible"
+        android:max="100"/>
 </RelativeLayout>

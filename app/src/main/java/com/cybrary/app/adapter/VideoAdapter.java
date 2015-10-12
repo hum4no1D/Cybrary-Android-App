@@ -84,6 +84,7 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
         else {
             //  Video is currently downloading
             downloadProgress.setVisibility(View.VISIBLE);
+            downloadProgress.setProgress(video.downloadProgress);
             deleteButton.setVisibility(View.INVISIBLE);
             downloadButton.setVisibility(View.INVISIBLE);
         }
@@ -100,7 +101,7 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
             public void run() {
                 Log.i("ADAPTER", "Downloading video " + video.videoUrl);
 
-                video.downloadForOfflineAccess(parent);
+                video.downloadForOfflineAccess(VideoAdapter.this, parent);
 
                 Log.i("ADAPTER", "Downloaded video " + video.videoUrl);
 
