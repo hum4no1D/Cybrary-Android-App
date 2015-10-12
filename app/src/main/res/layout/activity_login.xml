@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:text="Username"
+            android:id="@+id/title"
 
             />
 
@@ -44,6 +45,8 @@
             android:layout_height="wrap_content"
             android:text="Password"
             android:textColor="@android:color/white"
+            android:id="@+id/pwd"
+
 
             />
 

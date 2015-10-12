@@ -33,7 +33,7 @@ public class LoginActivity extends Activity {
 
     SharedPreferences credentials;
     EditText user,pass;
-    TextView tv;
+    TextView tv,usertitle, pwdtitle;
     ProgressDialog dialog = null;
     CookieManager cookieManager;
 
@@ -56,9 +56,11 @@ public class LoginActivity extends Activity {
             finish();
         }
 
-        user = (EditText)findViewById(R.id.Login);
+        usertitle = (TextView)findViewById(R.id.title);
         Typeface batman = Typeface.createFromAsset(getAssets(), "batman.ttf");
-        user.setTypeface(batman);
+        usertitle.setTypeface(batman);
+        pwdtitle = (TextView)findViewById(R.id.pwd);
+        pwdtitle.setTypeface(batman);
 
     }
 
@@ -99,7 +101,6 @@ public class LoginActivity extends Activity {
                 else {
                     Toast.makeText(LoginActivity.this, "Login failure :(", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
-
                     Log.i("LoginActivity", "Login failure, server replied: " + response);
                 }
             }
