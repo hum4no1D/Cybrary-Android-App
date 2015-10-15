@@ -15,10 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybrary.app.adapter.VideoAdapter;
@@ -134,6 +136,8 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
                 }
             }
         });
+
+        listView.setAdapter(new VideoAdapter(CourseActivity.this, new ArrayList<Video>()));
     }
 
     public boolean canPlayVideo(int delta) {
@@ -207,6 +211,12 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
                 if(videos.size() > 0) {
                     moveToVideo(1);
                 }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(CourseActivity.this, "Unable to load videos from server. Website may be down?", Toast.LENGTH_LONG).show();
+                super.onErrorResponse(error);
             }
         };
         StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, responseListener, responseListener);

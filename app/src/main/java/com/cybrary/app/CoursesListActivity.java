@@ -51,7 +51,8 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
             @Override
             public void onResponse(String response) {
                 super.onResponse(response);
-                if(!response.contains(getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "UNKNOWNUSER"))) {
+                String username = getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "UNKNOWNUSER");
+                if(!response.toLowerCase().contains(username)) {
                     //We've been logged out!
                     logOut();
                     return;

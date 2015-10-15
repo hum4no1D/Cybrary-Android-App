@@ -1,10 +1,8 @@
 package com.cybrary.app;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -88,7 +86,11 @@ public class LoginActivity extends Activity {
                 //Server replied successfully (200)
                 //Now check if the login was successful too
                 //So ensure user had a valid username AND a valid password
-                if (!response.contains("Invalid username") && !response.contains("The password you entered for the username") && response.contains("@" + log + "<br")) {
+                Boolean invalidUsername = response.contains("Invalid username");
+                Boolean invalidPassword = response.contains("The password you entered for the username");
+                Boolean reallyLoggedIn = response.contains("Cybrary Tag:");
+
+                if (!invalidUsername && !invalidPassword && reallyLoggedIn) {
                     Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     tv.setText("Login Successfully");
@@ -110,24 +112,8 @@ public class LoginActivity extends Activity {
                 //Some server error, or no network connectivity
                 error.printStackTrace();
 
-                //Depending on wordpress configuration you may need to move this code higher, near the "login failure" instead
-                //i don't know if wordpress replies with custom http status code
-                LoginActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                        builder.setTitle("Login Error.");
-                        builder.setMessage("User not Found.")
-                                .setCancelable(false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                    }
-                                });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                        dialog.dismiss();
-
-                    }
-                });
+                dialog.dismiss();
+                Toast.makeText(LoginActivity.this, "Unable to connect to Cybrary website. Website may be down, Please try again later.", Toast.LENGTH_LONG).show();
             }
         }) {
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
