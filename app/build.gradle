@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
 
 android {
     compileSdkVersion 23
@@ -7,8 +9,8 @@ android {
         applicationId 'com.cybrary.app'
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 11
-        versionName "1.10"
+        versionCode 12
+        versionName "2.0"
     }
     buildTypes {
         release {
@@ -27,6 +29,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.mcxiaoke.volley:library:1.0.15'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
+    compile 'com.google.android.gms:play-services-analytics:8.1.0'
+
 
 }
 

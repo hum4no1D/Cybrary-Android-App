@@ -56,8 +56,12 @@ public abstract class LoggedInAbstractActivity extends AppCompatActivity {
             return true;
         }else if(id == R.id.action_profile) {
             String login = getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "");
-            Intent jobsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/wp-login.php?redirect_to=https%3A%2F%2Fwww.cybrary.it%2Fmembers%2F" + login));
-            startActivity(jobsIntent);
+            Intent profileIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/wp-login.php?redirect_to=https%3A%2F%2Fwww.cybrary.it%2Fmembers%2F" + login));
+            startActivity(profileIntent);
+            return true;
+        } else if(id == R.id.action_cybytes) {
+            Intent cybytesIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/cybytes/"));
+            startActivity(cybytesIntent);
             return true;
         }
 

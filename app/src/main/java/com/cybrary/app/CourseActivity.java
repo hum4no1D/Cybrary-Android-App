@@ -215,7 +215,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(CourseActivity.this, "Unable to load videos from server. Website may be down?", Toast.LENGTH_LONG).show();
+                Toast.makeText(CourseActivity.this, "Unable to load videos from server. Website may be down or you have bad internet connection, try again later", Toast.LENGTH_LONG).show();
                 super.onErrorResponse(error);
             }
         };

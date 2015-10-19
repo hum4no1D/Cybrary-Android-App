@@ -20,6 +20,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -28,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends Activity {
+    private Tracker mTracker;
 
     SharedPreferences credentials;
     EditText user,pass;
@@ -60,6 +63,16 @@ public class LoginActivity extends Activity {
         pwdtitle = (TextView)findViewById(R.id.pwd);
         pwdtitle.setTypeface(batman);
 
+        CybraryApplication application = (CybraryApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+
+    }
+
+    @Override
+    protected void onResume() {
+        mTracker.setScreenName("LoginActivity");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        super.onResume();
     }
 
     public void Log_in(View e){
@@ -92,15 +105,19 @@ public class LoginActivity extends Activity {
 
                 if (!invalidUsername && !invalidPassword && reallyLoggedIn) {
                     Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
                     tv.setText("Login Successfully");
                     getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().putString("login", log).commit();
 
                     //Now, start CoursesListActivity
                     startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
                     dialog.dismiss();
-                }
-                else {
+                }else if(invalidUsername && !invalidPassword){
+                    Toast.makeText(LoginActivity.this, "Invalid username", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }else if(!invalidUsername && invalidPassword) {
+                    Toast.makeText(LoginActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }else{
                     Toast.makeText(LoginActivity.this, "Login failure :(", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     Log.i("LoginActivity", "Login failure, server replied: " + response);

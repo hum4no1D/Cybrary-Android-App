@@ -1,5 +1,6 @@
 package com.cybrary.app;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.widget.AdapterView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybrary.app.adapter.CourseAdapter;
@@ -42,6 +44,9 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
     }
 
     public void downloadCourses() {
+        final ProgressDialog dialog = ProgressDialog.show(this, "",
+                "Downloading latest courses...", true);
+
         // Download the list of courses from the website
         // Creating a new Volley HTTP POST request
         String reqUrl = "https://www.cybrary.it/courses";
@@ -63,11 +68,11 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
                 ArrayList<Course> courses = new ArrayList<>();
 
                 //  Retrieve all categories content
-                Pattern blocksPattern = Pattern.compile("<h6.+?<\\/div\\>", Pattern.DOTALL);
+                Pattern blocksPattern = Pattern.compile("<div class=\"one_third( last_column)?\".+?<\\/ul\\>", Pattern.DOTALL);
 
                 // Titles are formatted like this:
-                // <h6 class="bmfont"><a title="Systems Administration" href="http://www.cybrary.it/systems-administration/">Systems Administration</a></h6>
-                Pattern titlePattern = Pattern.compile("h6.+a title.+\\>([^\\>]+)\\<\\/a\\>");
+                // <div class="thetab" style="background:#5BC2DA;color:#000;">Intermediate</div>
+                Pattern titlePattern = Pattern.compile("000;\"\\>([^\\>]+)\\<\\/div\\>");
 
                 // Courses are formatted like this:
                 // <li><a href="http://www.cybrary.it/course/ccna/">CCNA</a></li>
@@ -111,7 +116,14 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
                     }
                 });
 
+                dialog.dismiss();
                 listView.setAdapter(new CourseAdapter(CoursesListActivity.this, courses));
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                super.onErrorResponse(error);
+                dialog.dismiss();
             }
         };
 
