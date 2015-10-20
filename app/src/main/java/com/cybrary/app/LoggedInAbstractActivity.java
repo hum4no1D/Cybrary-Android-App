@@ -3,20 +3,45 @@ package com.cybrary.app;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 /**
  * Created by cybrary02 on 9/28/15.
  */
 public abstract class LoggedInAbstractActivity extends AppCompatActivity {
+    protected Tracker mTracker;
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_loggedin, menu);
         return true;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        CybraryApplication application = (CybraryApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+    }
+
+
+    @Override
+    protected void onResume() {
+        Log.e("Analytics", "Class name:" + getClass().getSimpleName());
+        mTracker.setScreenName(getClass().getSimpleName());
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        super.onResume();
     }
 
     @Override

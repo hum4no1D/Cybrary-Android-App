@@ -43,6 +43,8 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        CybraryApplication application = (CybraryApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         cookieManager = new CookieManager(((CybraryApplication) getApplication()).getCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
@@ -62,9 +64,6 @@ public class LoginActivity extends Activity {
         usertitle.setTypeface(batman);
         pwdtitle = (TextView)findViewById(R.id.pwd);
         pwdtitle.setTypeface(batman);
-
-        CybraryApplication application = (CybraryApplication) getApplication();
-        mTracker = application.getDefaultTracker();
 
     }
 
@@ -96,6 +95,12 @@ public class LoginActivity extends Activity {
         StringRequest messagesRequest = new StringRequest(Request.Method.POST, reqUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                try {
+                    dialog.dismiss();
+                } catch(IllegalArgumentException e) {
+                    //  Dialog is not currently shown (user rotated devices while logging in for instance)
+                }
+
                 //Server replied successfully (200)
                 //Now check if the login was successful too
                 //So ensure user had a valid username AND a valid password
@@ -103,25 +108,26 @@ public class LoginActivity extends Activity {
                 Boolean invalidPassword = response.contains("The password you entered for the username");
                 Boolean reallyLoggedIn = response.contains("Cybrary Tag:");
 
-                if (!invalidUsername && !invalidPassword && reallyLoggedIn) {
+
+                if(invalidUsername) {
+                    Toast.makeText(LoginActivity.this, "Invalid username", Toast.LENGTH_SHORT).show();
+                }
+                else if(invalidPassword) {
+                    Toast.makeText(LoginActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
+                }
+                else if(reallyLoggedIn) {
                     Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
                     tv.setText("Login Successfully");
                     getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().putString("login", log).commit();
 
                     //Now, start CoursesListActivity
                     startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
-                    dialog.dismiss();
-                }else if(invalidUsername && !invalidPassword){
-                    Toast.makeText(LoginActivity.this, "Invalid username", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                }else if(!invalidUsername && invalidPassword) {
-                    Toast.makeText(LoginActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                }else{
+                }
+                else {
                     Toast.makeText(LoginActivity.this, "Login failure :(", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
                     Log.i("LoginActivity", "Login failure, server replied: " + response);
                 }
+
             }
         }, new Response.ErrorListener() {
             @Override

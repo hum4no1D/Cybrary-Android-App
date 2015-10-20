@@ -116,7 +116,12 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
                     }
                 });
 
-                dialog.dismiss();
+                try {
+                    dialog.dismiss();
+                } catch(IllegalArgumentException e) {
+                    //  Dialog is not currently shown (user rotated device while logging in for instance)
+                }
+
                 listView.setAdapter(new CourseAdapter(CoursesListActivity.this, courses));
             }
 

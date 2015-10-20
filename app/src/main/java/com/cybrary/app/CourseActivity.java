@@ -27,6 +27,7 @@ import com.cybrary.app.adapter.VideoAdapter;
 import com.cybrary.app.listener.CachedResponseListener;
 import com.cybrary.app.pojo.Course;
 import com.cybrary.app.pojo.Video;
+import com.google.android.gms.analytics.HitBuilders;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -144,11 +145,20 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         return currentVideoIndex + delta >= 0 && currentVideoIndex + delta < listView.getAdapter().getCount();
     }
     public void moveToVideo(int delta) {
+
+
         Log.i("CourseActivity", "Trying to move to video " + currentVideoIndex + " delta " + delta);
         if(canPlayVideo(delta)) {
             currentVideoIndex += delta;
             Video next = (Video) listView.getAdapter().getItem(currentVideoIndex);
             next.getMp4Url(CourseActivity.this, CourseActivity.this);
+
+            // Build and send an Event.
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("course")
+                    .setAction("play-video")
+                    .setLabel(next.name)
+                    .build());
         }
 
         prev.setVisibility(canPlayVideo(-1) ? View.VISIBLE : View.INVISIBLE);

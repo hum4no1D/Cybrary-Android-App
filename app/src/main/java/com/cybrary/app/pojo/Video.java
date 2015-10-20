@@ -211,7 +211,7 @@ public class Video {
         StringRequest messagesRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //We're looking for something which looks like this:
+                // We're looking for something which looks like this:
                 // <iframe src="https://player.vimeo.com/video/116096483" width="500" height="281" frameborder="0"></iframe>
                 // We'll use a regexp to match this in the raw HTML:
                 Pattern p = Pattern.compile("player\\.vimeo\\.com/video/([0-9]+)\" width");
@@ -219,7 +219,11 @@ public class Video {
                 while(m.find()) {
                     vimeoMetadataUrl = "https://player.vimeo.com/video/" + m.group(1);
                 }
-                //ANext steps: download vimeo metadata
+
+                if(vimeoMetadataUrl == null) {
+                    throw new RuntimeException("Unable to play vimeo file " + url + " (" + name + ")");
+                }
+                // Next steps: download vimeo metadata
                 downloadVideoMetadata(context, listener);
 
             }
