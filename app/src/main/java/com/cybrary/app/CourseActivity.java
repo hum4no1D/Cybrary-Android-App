@@ -1,5 +1,6 @@
 package com.cybrary.app;
 
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -66,6 +67,9 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         downloadVideos(course);
 
         vidView = (VideoView) findViewById(R.id.myVideo);
+        final MediaController mc = new MediaController(CourseActivity.this);
+        vidView.setMediaController(mc);
+        mc.setMediaPlayer(vidView);
 
         vidView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -73,16 +77,12 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
                 mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
                     @Override
                     public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-                                          /*
-                                           *  add media controller
-                                           */
-                        MediaController mc = new MediaController(CourseActivity.this);
-                        ;
-                        vidView.setMediaController(mc);
+
                                           /*
                                            * and set its position on screen
                                            */
                         mc.setAnchorView(vidView);
+                        mc.show(500);
                     }
                 });
             }
@@ -101,6 +101,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
 
         next = findViewById(R.id.next_video);
         prev = findViewById(R.id.prev_video);
+        final View fullscreen = findViewById(R.id.fullscreen);
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,12 +109,23 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
                 moveToVideo(1);
             }
         });
-
-
+        
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moveToVideo(-1);
+            }
+        });
+
+        fullscreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    CourseActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                }
+                else {
+                    CourseActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
             }
         });
    }
@@ -144,9 +156,8 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
     public boolean canPlayVideo(int delta) {
         return currentVideoIndex + delta >= 0 && currentVideoIndex + delta < listView.getAdapter().getCount();
     }
+
     public void moveToVideo(int delta) {
-
-
         Log.i("CourseActivity", "Trying to move to video " + currentVideoIndex + " delta " + delta);
         if(canPlayVideo(delta)) {
             currentVideoIndex += delta;
@@ -175,7 +186,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
             getWindow().getDecorView().setBackgroundColor(Color.BLACK);
         }
         else {
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 200);
             lp.weight = 1.0f;
             lp.gravity = Gravity.CENTER_HORIZONTAL;
             videoPlayer.setLayoutParams(lp);
@@ -240,20 +251,5 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         Uri vidUri = Uri.parse(video.videoUrl);
         vidView.setVideoURI(vidUri);
         vidView.start();
-    }
-
-    /*
-     * Pause current video
-     */
-    public void pauseVideo() {
-        vidView.pause();
-    }
-
-
-    /*
-     * Play current video
-     */
-    public void playVideo() {
-        vidView.resume();
     }
 }

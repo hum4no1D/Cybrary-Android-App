@@ -90,7 +90,7 @@ public class Video {
         }
 
         // Temporary filename, just checking everything works.
-        String fileName = getPotentialFileName();
+        String fileName = getPotentialFileName() + "-temp";
 
         try {
 
@@ -136,8 +136,18 @@ public class Video {
             /* Display any Error to the GUI. */
             e.printStackTrace();
             Log.e("DOWNLOAD", "Unable to download file.");
+
+            //  Remove file, since it's probably invalid
+            File f = new File(fileName);
+            f.delete();
             return false;
         }
+
+        //  Rename the file to its real name:
+        //  That way, if a download is aborted, we don't keep an invalid version displayed
+        File realFile = new File(getPotentialFileName());
+        File tempFile = new File(fileName);
+        tempFile.renameTo(realFile);
 
         return true;
     }
