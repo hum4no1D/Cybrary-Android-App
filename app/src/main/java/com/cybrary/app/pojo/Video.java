@@ -181,7 +181,16 @@ public class Video {
 
                         String quality = PreferenceManager.getDefaultSharedPreferences(context).getString("quality", "sd");
                         Log.i("Video", "Downloading video with quality " + quality);
-                        videoUrl = vimeoMetadata.getJSONObject("request").getJSONObject("files").getJSONObject("h264").getJSONObject(quality).getString("url");
+                        JSONObject qualities = vimeoMetadata.getJSONObject("request").getJSONObject("files").getJSONObject("h264");
+
+                        try {
+                            videoUrl = qualities.getJSONObject(quality).getString("url");
+                        }
+                        catch(JSONException e) {
+                            //  Mobile exception can be missing in some videos
+                            //  in such cases revert to sd quality.
+                            videoUrl = qualities.getJSONObject("sd").getString("url");
+                        }
                     }
                     catch(JSONException e) {
                         e.printStackTrace();
