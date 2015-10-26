@@ -1,5 +1,7 @@
 package com.cybrary.app;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -19,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -42,6 +45,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
     private Course course;
     private int currentVideoIndex = -1;
     private VideoView vidView;
+    private SharedPreferences videoPosition;
 
     private View next;
     private View prev;
@@ -92,6 +96,8 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
             @Override
             public void onCompletion(MediaPlayer mp) {
                 Log.i("Video", "Finished playback");
+                //  Remove last known cursor for video -- we want the video to start over again if we click on it
+                videoPosition.edit().remove(Integer.toString(getCurrentVideo().getId()));
                 moveToVideo(1);
             }
         });
@@ -128,7 +134,19 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
                 }
             }
         });
+
+        videoPosition = getSharedPreferences("videoPosition", Context.MODE_PRIVATE);
    }
+
+    public Video getCurrentVideo() {
+        if(listView.getAdapter() != null && currentVideoIndex
+                != -1) {
+            return (Video) listView.getAdapter().getItem(currentVideoIndex);
+        }
+
+        return null;
+    }
+
 
     public void initializeListView() {
         listView = (ListView) findViewById(R.id.listView);
@@ -201,7 +219,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         super.onConfigurationChanged(newConfig);
     }
 
-    public void downloadVideos(Course course) {
+    public void downloadVideos(final Course course) {
         // Download the list of courses from the website
         // Creating a new Volley HTTP GET request
         String reqUrl = course.url;
@@ -215,6 +233,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
                 ArrayList<Video> videos = new ArrayList<>();
 
                 // Videos are formatted like this:
+                // <a href="https://www.cybrary.it/video/anthony-harris/" class="title">About Anthony Harris</a> <script>showcheck('2068');</script><br /><span class="vidlength">Length: 01:58</span><br />
                 // <a href="https://www.cybrary.it/video/the-bios/" class="title">BIOS &#8211; Basic Input Output System</a>
                 // use a regexp to match them all in the raw HTML:
                 Pattern p = Pattern.compile("cybrary\\.it/video/(.+)\" class=\"title\">([^\\>]+)\\<\\/a\\>");
@@ -228,9 +247,10 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
 
                 listView.setAdapter(new VideoAdapter(CourseActivity.this, videos));
 
-                // Play the first video automatically
+                // Play the first video automatically,
+                //  Or restart on last known video
                 if(videos.size() > 0) {
-                    moveToVideo(1);
+                    moveToVideo(1 + videoPosition.getInt(course.name, 0));
                 }
             }
 
@@ -242,6 +262,9 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         };
         StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, responseListener, responseListener);
 
+        messagesRequest.setRetryPolicy(new DefaultRetryPolicy(20000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         // Send the request
         queue.add(messagesRequest);
     }
@@ -251,5 +274,30 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         Uri vidUri = Uri.parse(video.videoUrl);
         vidView.setVideoURI(vidUri);
         vidView.start();
+
+        if(videoPosition.contains(Integer.toString(video.getId()))) {
+            //  Resuming from earlier play
+            int position = videoPosition.getInt(Integer.toString(video.getId()), -1);
+            Log.i("CourseActivity", "Resuming video at index " + position);
+
+            vidView.seekTo(position);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Video currentVideo = getCurrentVideo();
+        if(currentVideo != null) {
+            //  Remember position for current video
+            SharedPreferences.Editor editor = videoPosition.edit();
+
+            editor.putInt(Integer.toString(currentVideo.getId()), vidView.getCurrentPosition());
+            editor.putInt(course.name, currentVideoIndex);
+
+            editor.apply();
+
+        }
     }
 }

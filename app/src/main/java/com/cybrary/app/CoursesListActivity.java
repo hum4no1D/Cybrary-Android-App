@@ -1,7 +1,6 @@
 package com.cybrary.app;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -56,8 +55,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
             @Override
             public void onResponse(String response) {
                 super.onResponse(response);
-                String username = getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "UNKNOWNUSER");
-                if(!response.toLowerCase().contains(username)) {
+                if(!response.toLowerCase().contains("/wp-login.php?action=logout")) {
                     //We've been logged out!
                     logOut();
                     return;

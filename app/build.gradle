@@ -9,8 +9,8 @@ android {
         applicationId 'com.cybrary.app'
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 13
-        versionName "2.0.1"
+        versionCode 14
+        versionName "2.0.2"
     }
     buildTypes {
         release {
