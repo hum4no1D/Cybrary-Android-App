@@ -290,7 +290,6 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
             vidView.seekTo(position);
         }
 
-        Log.e("WTF", "CURRENTINDEX" + currentVideoIndex);
         if(loadingFirstVideo && !PreferenceManager.getDefaultSharedPreferences(CourseActivity.this).getBoolean("autoplay", true)) {
             Log.i("CourseActivity", "Autoplay was disabled.");
             vidView.pause();

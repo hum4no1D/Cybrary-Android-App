@@ -88,7 +88,7 @@ public class Video {
         retrieveVimeoUrl(context, listener);
     }
 
-    public boolean downloadForOfflineAccess(final BaseAdapter adapter, Activity parent) {
+    public boolean downloadForOfflineAccess(final BaseAdapter adapter, final Activity parent) {
         if(videoUrl == null) {
             throw new RuntimeException("You need to call getMp4Url() before");
         }
@@ -102,7 +102,15 @@ public class Video {
             URLConnection connection = url.openConnection();
             connection.connect();
 
-            int totalLength = connection.getContentLength();
+            final int totalLength = connection.getContentLength();
+
+            parent.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(parent, "Downloading " + name + " (" + Math.round(totalLength / 1024 / 1024) + "mb)", Toast.LENGTH_SHORT).show();
+                    ;
+                }
+            });
 
             java.io.BufferedInputStream in = new java.io.BufferedInputStream(url.openStream());
             java.io.FileOutputStream fos = new java.io.FileOutputStream(fileName);
