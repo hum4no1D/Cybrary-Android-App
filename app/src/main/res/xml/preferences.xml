@@ -17,5 +17,10 @@
             android:key="quality"
             android:summary="Pick video quality depending on your Internet connection"
             android:title="Video quality"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="autoplay"
+            android:summary="Start videos automatically"
+            android:title="Auto-play feature"></CheckBoxPreference>
     </PreferenceCategory>
 </PreferenceScreen>

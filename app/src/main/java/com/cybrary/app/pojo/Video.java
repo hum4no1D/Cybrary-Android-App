@@ -2,8 +2,11 @@ package com.cybrary.app.pojo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
@@ -14,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.cybrary.app.LoginActivity;
 import com.cybrary.app.VideoUrlListener;
 
 import org.json.JSONException;
@@ -240,10 +244,29 @@ public class Video {
                 }
 
                 if(vimeoMetadataUrl == null) {
-                    throw new RuntimeException("Unable to play vimeo file " + url + " (" + name + ")");
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    context.startActivity(new Intent(context, LoginActivity.class));
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    //No button clicked
+                                    break;
+                            }
+                        }
+                    };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("You need to login to view videos.").setPositiveButton("OK", dialogClickListener)
+                            .setNegativeButton("Cancel", dialogClickListener).show();
                 }
-                // Next steps: download vimeo metadata
-                downloadVideoMetadata(context, listener);
+                else {
+                    // Next steps: download vimeo metadata
+                    downloadVideoMetadata(context, listener);
+                }
 
             }
         }, new Response.ErrorListener() {

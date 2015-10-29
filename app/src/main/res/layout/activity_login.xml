@@ -85,6 +85,12 @@
             android:text="Register"
             android:onClick="RegUri" />
 
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:onClick="cancelLogin" />
+
         <TextView
             android:id="@+id/Situacao"
             android:layout_width="fill_parent"

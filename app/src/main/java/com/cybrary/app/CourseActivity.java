@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -45,7 +46,9 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
     private Course course;
     private int currentVideoIndex = -1;
     private VideoView vidView;
+    private MediaController mc;
     private SharedPreferences videoPosition;
+    private boolean loadingFirstVideo = true;
 
     private View next;
     private View prev;
@@ -71,7 +74,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         downloadVideos(course);
 
         vidView = (VideoView) findViewById(R.id.myVideo);
-        final MediaController mc = new MediaController(CourseActivity.this);
+        mc = new MediaController(CourseActivity.this);
         vidView.setMediaController(mc);
         mc.setMediaPlayer(vidView);
 
@@ -95,6 +98,10 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         vidView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                mp.setDisplay(null);
+                mp.reset();
+                mp.setDisplay(vidView.getHolder());
+
                 Log.i("Video", "Finished playback");
                 //  Remove last known cursor for video -- we want the video to start over again if we click on it
                 videoPosition.edit().remove(Integer.toString(getCurrentVideo().getId()));
@@ -282,6 +289,15 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
 
             vidView.seekTo(position);
         }
+
+        Log.e("WTF", "CURRENTINDEX" + currentVideoIndex);
+        if(loadingFirstVideo && !PreferenceManager.getDefaultSharedPreferences(CourseActivity.this).getBoolean("autoplay", true)) {
+            Log.i("CourseActivity", "Autoplay was disabled.");
+            vidView.pause();
+            mc.show(2500);
+        }
+
+        loadingFirstVideo = false;
     }
 
     @Override

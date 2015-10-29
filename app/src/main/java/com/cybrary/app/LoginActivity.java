@@ -1,9 +1,6 @@
 package com.cybrary.app;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -45,19 +42,6 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        Intent intent=new Intent(this, LoginActivity.class);
-        PendingIntent pIntent= PendingIntent.getActivity(LoginActivity.this, 0, intent, 0);
-        Notification noti = new Notification.Builder(LoginActivity.this)
-                .setTicker("TickerTitle")
-                .setContentTitle("Cybrary")
-                .setContentText("Becoming a top cyber security talent requires daily learning. Learn something new today on Cybrary!")
-                .setSmallIcon(R.drawable.logowhite2)
-                .setContentIntent(pIntent).getNotification();
-
-                noti.flags = Notification.FLAG_AUTO_CANCEL;
-        NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        nm.notify(0,noti);
 
         CybraryApplication application = (CybraryApplication) getApplication();
         mTracker = application.getDefaultTracker();
@@ -139,7 +123,8 @@ public class LoginActivity extends Activity {
                     getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().putString("login", log).commit();
 
                     //Now, start CoursesListActivity
-                    startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
+                    // startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
+                    finish();
                 }
                 else {
                     Toast.makeText(LoginActivity.this, "Login failure :(", Toast.LENGTH_SHORT).show();
@@ -183,6 +168,10 @@ public class LoginActivity extends Activity {
         startActivity(Recuperar);
     }
 
+    public void cancelLogin(View v)
+    {
+        finish();
+    }
 
 
 
