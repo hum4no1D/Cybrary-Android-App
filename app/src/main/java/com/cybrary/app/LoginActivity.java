@@ -1,6 +1,9 @@
 package com.cybrary.app;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -43,6 +46,19 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Intent intent=new Intent(this, LoginActivity.class);
+        PendingIntent pIntent= PendingIntent.getActivity(LoginActivity.this, 0, intent, 0);
+        Notification noti = new Notification.Builder(LoginActivity.this)
+                .setTicker("TickerTitle")
+                .setContentTitle("Cybrary")
+                .setContentText("Becoming a top cyber security talent requires daily learning. Learn something new today on Cybrary!")
+                .setSmallIcon(R.drawable.logowhite2)
+                .setContentIntent(pIntent).getNotification();
+
+                noti.flags = Notification.FLAG_AUTO_CANCEL;
+        NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        nm.notify(0,noti);
+
         CybraryApplication application = (CybraryApplication) getApplication();
         mTracker = application.getDefaultTracker();
 
@@ -58,6 +74,8 @@ public class LoginActivity extends Activity {
             startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
             finish();
         }
+
+
 
         usertitle = (TextView)findViewById(R.id.title);
         Typeface batman = Typeface.createFromAsset(getAssets(), "batman.ttf");
