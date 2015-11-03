@@ -34,7 +34,7 @@ public class LoginActivity extends Activity {
 
     SharedPreferences credentials;
     EditText user,pass;
-    TextView tv,usertitle, pwdtitle;
+    TextView tv,usertitle, pwdtitle, forgot;
     ProgressDialog dialog = null;
     CookieManager cookieManager;
 
@@ -66,6 +66,8 @@ public class LoginActivity extends Activity {
         usertitle.setTypeface(batman);
         pwdtitle = (TextView)findViewById(R.id.pwd);
         pwdtitle.setTypeface(batman);
+        forgot = (TextView)findViewById(R.id.textView2);
+        forgot.setTypeface(batman);
 
     }
 

@@ -122,11 +122,6 @@ public class PersistentCookieStore implements CookieStore {
         return mStore.removeAll();
     }
 
-    private String getJsonSessionCookieString() {
-        return getPrefs().getString(PREF_SESSION_COOKIE, PREF_DEFAULT_STRING);
-    }
-
-
     private SharedPreferences getPrefs() {
         return mContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }

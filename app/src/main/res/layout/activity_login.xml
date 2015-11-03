@@ -8,7 +8,8 @@
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="wrap_content"
+        android:gravity="bottom">
 
 
         <ImageView
@@ -65,36 +66,52 @@
         <Button
             android:id="@+id/login_button"
             android:layout_width="fill_parent"
-            android:layout_marginTop="35dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="Login"
-            android:layout_weight="1"
             android:onClick="Log_in"
-            />
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Forgot password"
-            android:layout_weight="1"
-            android:onClick="EsqASenha" />
+            android:background="#3b5998"
+            android:textColor="#FFFFFF"
+         />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Register"
-            android:onClick="RegUri" />
+            android:onClick="RegUri"
+            android:background="#55acee"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="10dp"
+          />
 
-        <Button
-            android:layout_width="fill_parent"
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:onClick="cancelLogin" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Forgot Password?"
+            android:id="@+id/textView2"
+            android:textColor="#FFFFFF"
+            android:onClick="EsqASenha"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            />
 
         <TextView
             android:id="@+id/Situacao"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Preview"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#FFFFFF"
+            android:onClick="cancelLogin"/>
 
     </LinearLayout>
 </ScrollView>

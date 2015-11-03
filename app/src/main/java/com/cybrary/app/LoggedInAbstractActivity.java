@@ -61,18 +61,19 @@ public abstract class LoggedInAbstractActivity extends AppCompatActivity {
             return true;
         }
         else if(id == R.id.action_forum) {
-            Intent forumIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/forums/#forums-list-0"));
+            Intent forumIntent = new Intent(this, WebviewActivity.class);
+            forumIntent.putExtra("url", "https://www.cybrary.it/forums/#forums-list-0");
             startActivity(forumIntent);
             return true;
         }
         else if(id == R.id.action_rate) {
-
             Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.cybrary.app");
             Intent gotoMarket = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(gotoMarket);
         }
         else if(id == R.id.action_jobs) {
-            Intent jobsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/cyber-security-jobs/"));
+            Intent jobsIntent = new Intent(this, WebviewActivity.class);
+            jobsIntent.putExtra("url", "https://www.cybrary.it/cyber-security-jobs/");
             startActivity(jobsIntent);
             return true;
         }
@@ -81,11 +82,13 @@ public abstract class LoggedInAbstractActivity extends AppCompatActivity {
             return true;
         }else if(id == R.id.action_profile) {
             String login = getSharedPreferences("credentials", Context.MODE_PRIVATE).getString("login", "");
-            Intent profileIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/wp-login.php?redirect_to=https%3A%2F%2Fwww.cybrary.it%2Fmembers%2F" + login));
+            Intent profileIntent = new Intent(this, WebviewActivity.class);
+            profileIntent.putExtra("url", "https://www.cybrary.it/members/" + login + "/");
             startActivity(profileIntent);
             return true;
         } else if(id == R.id.action_cybytes) {
-            Intent cybytesIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/cybytes/"));
+            Intent cybytesIntent = new Intent(this, WebviewActivity.class);
+            cybytesIntent.putExtra("url", "https://www.cybrary.it/cybytes/");
             startActivity(cybytesIntent);
             return true;
         }
@@ -96,8 +99,8 @@ public abstract class LoggedInAbstractActivity extends AppCompatActivity {
     public void logOut() {
         // Log the user out
         getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().remove("login").commit();
+        ((CybraryApplication) getApplication()).getCookieStore(this).removeAll();
         startActivity(new Intent(this, LoginActivity.class));
         Toast.makeText(this, "You have been logged out", Toast.LENGTH_LONG).show();
-        finish();
     }
 }

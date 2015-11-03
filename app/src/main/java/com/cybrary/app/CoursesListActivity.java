@@ -41,7 +41,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
 
         downloadCourses();
 
-        /*
+/*
         Intent intent=new Intent(this, CoursesListActivity.class);
         PendingIntent pIntent= PendingIntent.getActivity(CoursesListActivity.this, 0, intent, 0);
         Notification noti = new NotificationCompat.Builder(CoursesListActivity.this)
@@ -56,7 +56,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
         noti.flags = Notification.FLAG_AUTO_CANCEL;
         NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         nm.notify(0, noti);
-        */
+*/
     }
 
     public void downloadCourses() {
