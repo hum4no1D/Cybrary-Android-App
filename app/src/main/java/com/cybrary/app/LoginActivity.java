@@ -34,7 +34,7 @@ public class LoginActivity extends Activity {
 
     SharedPreferences credentials;
     EditText user,pass;
-    TextView tv,usertitle, pwdtitle, forgot;
+    TextView usertitle, pwdtitle, forgot;
     ProgressDialog dialog = null;
     CookieManager cookieManager;
 
@@ -120,7 +120,7 @@ public class LoginActivity extends Activity {
                 }
                 else if(reallyLoggedIn) {
                     Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-                    tv.setText("Login Successfully");
+
                     getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().putString("login", log).commit();
 
                     //Now, start CoursesListActivity
