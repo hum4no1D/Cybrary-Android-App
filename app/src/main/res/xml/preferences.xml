@@ -3,7 +3,7 @@
     android:title="Settings">
     <PreferenceCategory android:title="Offline management">
         <com.cybrary.app.preference.ResetPreference
-            android:dialogMessage="Do you really want to reset your history?"
+            android:dialogMessage="Do you really want to  remove all downloaded videos?"
             android:key="reset"
             android:summary="Remove all offline videos"
             android:title="Clean offline storage">

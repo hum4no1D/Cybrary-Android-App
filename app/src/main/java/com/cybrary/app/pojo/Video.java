@@ -19,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybrary.app.LoginActivity;
 import com.cybrary.app.VideoUrlListener;
+import com.cybrary.app.request.CybraryRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,7 +59,10 @@ public class Video {
     }
 
     public String getPotentialFileName() {
-        return Environment.getExternalStorageDirectory() + "/cybrary-" + getId() + ".mp4";
+        String basePath = Environment.getExternalStorageDirectory() + "/cybrary/";
+        File dir = new File(basePath);
+        dir.mkdir();
+        return basePath + "cybrary-" + getId() + ".mp4";
     }
 
     public void removeLocalCopy() {
@@ -239,7 +243,7 @@ public class Video {
         // Download the Cybary video page, and retrieve the vimeo URL
         // Creating a new Volley HTTP GET request
         RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest messagesRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        CybraryRequest messagesRequest = new CybraryRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 // We're looking for something which looks like this:
@@ -270,6 +274,7 @@ public class Video {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setMessage("You need to login to view videos.").setPositiveButton("OK", dialogClickListener)
                             .setNegativeButton("Cancel", dialogClickListener).show();
+                    isDownloading = false;
                 }
                 else {
                     // Next steps: download vimeo metadata

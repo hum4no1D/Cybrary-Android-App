@@ -26,12 +26,12 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybrary.app.adapter.VideoAdapter;
 import com.cybrary.app.listener.CachedResponseListener;
 import com.cybrary.app.pojo.Course;
 import com.cybrary.app.pojo.Video;
+import com.cybrary.app.request.CybraryRequest;
 import com.google.android.gms.analytics.HitBuilders;
 
 import java.net.CookieHandler;
@@ -267,7 +267,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
                 super.onErrorResponse(error);
             }
         };
-        StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, responseListener, responseListener);
+        CybraryRequest messagesRequest = new CybraryRequest(Request.Method.GET, reqUrl, responseListener, responseListener);
 
         messagesRequest.setRetryPolicy(new DefaultRetryPolicy(20000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,

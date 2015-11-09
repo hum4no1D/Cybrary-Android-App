@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListener {
     public final static String PREFERENCE_TAG = "videoStore";
 
-    private CourseActivity parent;
+    private final CourseActivity parent;
 
     public VideoAdapter(CourseActivity context, ArrayList<Video> videos) {
         super(context, 0, videos);
@@ -39,8 +39,6 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_video, parent, false);
         }
 
-        final View videoView = convertView;
-
         TextView messageName = (TextView) convertView.findViewById(R.id.video_name);
         messageName.setText(Html.fromHtml(video.name));
 
@@ -52,7 +50,7 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
             @Override
             public void onClick(View v) {
                 //The user wants to download the video
-                video.getMp4Url(getContext(), VideoAdapter.this);
+                video.getMp4Url(VideoAdapter.this.parent, VideoAdapter.this);
                 video.isDownloading = true;
                 downloadButton.setVisibility(View.INVISIBLE);
                 downloadProgress.setVisibility(View.VISIBLE);

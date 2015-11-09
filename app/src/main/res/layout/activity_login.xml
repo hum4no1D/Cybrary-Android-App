@@ -78,7 +78,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Register"
-            android:onClick="RegUri"
+            android:onClick="register"
             android:background="#55acee"
             android:textColor="#FFFFFF"
             android:layout_marginTop="10dp"
@@ -92,15 +92,9 @@
             android:text="Forgot Password?"
             android:id="@+id/textView2"
             android:textColor="#FFFFFF"
-            android:onClick="EsqASenha"
+            android:onClick="lossPassword"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            />
-
-        <TextView
-            android:id="@+id/Situacao"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             />
 
         <TextView
@@ -111,6 +105,7 @@
             android:id="@+id/textView3"
             android:layout_gravity="center_horizontal"
             android:textColor="#FFFFFF"
+            android:layout_marginTop="10dp"
             android:onClick="cancelLogin"/>
 
     </LinearLayout>

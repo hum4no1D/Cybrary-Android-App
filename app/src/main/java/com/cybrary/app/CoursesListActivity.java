@@ -9,11 +9,11 @@ import android.widget.AdapterView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cybrary.app.adapter.CourseAdapter;
 import com.cybrary.app.listener.CachedResponseListener;
 import com.cybrary.app.pojo.Course;
+import com.cybrary.app.request.CybraryRequest;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -142,7 +142,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
             }
         };
 
-        StringRequest messagesRequest = new StringRequest(Request.Method.GET, reqUrl, responseListener, responseListener);
+        CybraryRequest messagesRequest = new CybraryRequest(Request.Method.GET, reqUrl, responseListener, responseListener);
 
         // Send the request
         queue.add(messagesRequest);

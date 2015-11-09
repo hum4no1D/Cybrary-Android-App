@@ -18,8 +18,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.cybrary.app.request.CybraryRequest;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -81,7 +81,6 @@ public class LoginActivity extends Activity {
     public void Log_in(View e){
         user = (EditText)findViewById(R.id.Login);
         pass = (EditText)findViewById(R.id.Senha);
-        tv = (TextView)findViewById(R.id.Situacao);
         dialog = ProgressDialog.show(LoginActivity.this, "", "Validating user...", true);
 
         String reqUrl = "https://www.cybrary.it/wp-login.php";
@@ -96,7 +95,7 @@ public class LoginActivity extends Activity {
 
         //Creating a new Volley HTTP POST request
         RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest messagesRequest = new StringRequest(Request.Method.POST, reqUrl, new Response.Listener<String>() {
+        CybraryRequest messagesRequest = new CybraryRequest(Request.Method.POST, reqUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -158,14 +157,15 @@ public class LoginActivity extends Activity {
     }
 
 
-    public void RegUri(View c){
-        Intent RegisterBtn = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/register/"));
+    public void register(View c){
+        Intent registerBtn = new Intent(this, WebviewActivity.class);
+        registerBtn.putExtra("url", "https://www.cybrary.it/register/");
+        startActivity(registerBtn);
 
-        startActivity(RegisterBtn);
     }
 
 
-    public void EsqASenha (View d){
+    public void lossPassword(View d){
         Intent Recuperar = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/wp-login.php?action=lostpassword"));
         startActivity(Recuperar);
     }
