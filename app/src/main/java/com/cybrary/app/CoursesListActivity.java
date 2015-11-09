@@ -90,7 +90,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
                 Pattern coursePattern = Pattern.compile("cybrary\\.it/course/(.+)\">([^\\>]+)\\<\\/a\\>\\<\\/li\\>");
 
                 Matcher blockMatcher = blocksPattern.matcher(response);
-                while(blockMatcher.find()) {
+                while (blockMatcher.find()) {
                     //  For each category block
                     //  Extract category title
                     String block = blockMatcher.group(0);
@@ -98,13 +98,13 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
                     String currentCategory = "Unknown category";
 
                     Matcher titleMatcher = titlePattern.matcher(block);
-                    while(titleMatcher.find()) {
+                    while (titleMatcher.find()) {
                         currentCategory = titleMatcher.group(1);
                     }
 
                     //  And extract all courses
                     Matcher courseMatcher = coursePattern.matcher(block);
-                    while(courseMatcher.find()) {
+                    while (courseMatcher.find()) {
                         String url = "https://www.cybrary.it/course/" + courseMatcher.group(1);
                         String name = courseMatcher.group(2);
                         Course course = new Course(name, url, currentCategory);
@@ -117,7 +117,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
                     @Override
                     public int compare(Course lhs, Course rhs) {
                         int categoryOrdering = lhs.category.compareTo(rhs.category);
-                        if(categoryOrdering != 0) {
+                        if (categoryOrdering != 0) {
                             return categoryOrdering;
                         }
 
@@ -128,7 +128,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
 
                 try {
                     dialog.dismiss();
-                } catch(IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     //  Dialog is not currently shown (user rotated device while logging in for instance)
                 }
 
@@ -138,7 +138,12 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 super.onErrorResponse(error);
-                dialog.dismiss();
+
+                try {
+                    dialog.dismiss();
+                } catch (IllegalArgumentException e) {
+                    //  Dialog is not currently shown (user rotated devices while logging in for instance)
+                }
             }
         };
 

@@ -139,7 +139,11 @@ public class LoginActivity extends Activity {
                 //Some server error, or no network connectivity
                 error.printStackTrace();
 
-                dialog.dismiss();
+                try {
+                    dialog.dismiss();
+                } catch (IllegalArgumentException e) {
+                    //  Dialog is not currently shown (user rotated devices while logging in for instance)
+                }
                 Toast.makeText(LoginActivity.this, "Unable to connect to Cybrary website. Website may be down, Please try again later.", Toast.LENGTH_LONG).show();
             }
         }) {
