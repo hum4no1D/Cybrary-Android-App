@@ -79,7 +79,7 @@ public class PersistentCookieStore implements CookieStore {
         mStore = new CookieManager().getCookieStore();
 
         Map<String, ?> keys = getPrefs().getAll();
-        for(Map.Entry<String, ?> entry: keys.entrySet()) {
+        for (Map.Entry<String, ?> entry : keys.entrySet()) {
             Gson gson = new Gson();
             HttpCookie cookie = gson.fromJson(entry.getValue().toString(), HttpCookie.class);
             mStore.add(URI.create(cookie.getDomain()), cookie);

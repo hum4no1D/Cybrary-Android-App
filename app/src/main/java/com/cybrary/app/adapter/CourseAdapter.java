@@ -17,9 +17,13 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 
 public class CourseAdapter extends ArrayAdapter<Course> implements StickyListHeadersAdapter {
+    public CourseAdapter(Context context, ArrayList<Course> courses) {
+        super(context, 0, courses);
+    }
+
     @Override
     public View getHeaderView(int i, View convertView, ViewGroup parent) {
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_course_header, parent, false);
         }
 
@@ -31,10 +35,6 @@ public class CourseAdapter extends ArrayAdapter<Course> implements StickyListHea
     @Override
     public long getHeaderId(int i) {
         return getItem(i).category.hashCode();
-    }
-
-    public CourseAdapter(Context context, ArrayList<Course> courses) {
-        super(context, 0, courses);
     }
 
     @Override

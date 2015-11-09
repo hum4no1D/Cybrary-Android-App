@@ -1,50 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="wrap_content"
-    android:padding="10dp"
-    android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Sample video"
         android:id="@+id/video_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_toStartOf="@+id/downloadProgress"
         android:layout_alignTop="@+id/downloadProgress"
-        android:layout_toLeftOf="@+id/downloadProgress" />
+        android:layout_toLeftOf="@+id/downloadProgress"
+        android:layout_toStartOf="@+id/downloadProgress"
+        android:text="Sample video"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_delete_black_24dp"
         android:id="@+id/deleteButton"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:background="?android:attr/selectableItemBackground"
-        android:visibility="invisible"
-        android:layout_alignParentEnd="true" />
-
-    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_file_download_black_24dp"
-        android:id="@+id/downloadButton"
-        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:background="?android:attr/selectableItemBackground"
-        android:layout_alignParentEnd="true" />
+        android:src="@drawable/ic_delete_black_24dp"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/downloadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/ic_file_download_black_24dp" />
 
     <ProgressBar
+        android:id="@+id/downloadProgress"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="75dp"
         android:layout_height="wrap_content"
-        android:id="@+id/downloadProgress"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:indeterminate="false"
-        android:visibility="invisible"
-        android:max="100"/>
+        android:max="100"
+        android:visibility="invisible" />
 </RelativeLayout>

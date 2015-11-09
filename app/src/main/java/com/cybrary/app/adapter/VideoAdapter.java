@@ -66,20 +66,18 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
             }
         });
 
-        if(video.isLocallyAvailable() && !video.isDownloading) {
+        if (video.isLocallyAvailable() && !video.isDownloading) {
             // Video can be played offline
             downloadButton.setVisibility(View.INVISIBLE);
             deleteButton.setVisibility(View.VISIBLE);
             downloadProgress.setVisibility(View.INVISIBLE);
-        }
-        else if(!video.isDownloading){
+        } else if (!video.isDownloading) {
             //  Video can't be played offline
             downloadButton.setVisibility(View.VISIBLE);
             deleteButton.setVisibility(View.INVISIBLE);
             downloadProgress.setVisibility(View.INVISIBLE);
 
-        }
-        else {
+        } else {
             //  Video is currently downloading
             downloadProgress.setVisibility(View.VISIBLE);
             downloadProgress.setProgress(video.downloadProgress);
@@ -94,7 +92,7 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
 
     @Override
     public void onUrlLoaded(final Video video) {
-        Thread thread = new Thread(new Runnable(){
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 Log.i("ADAPTER", "Downloading video " + video.videoUrl);

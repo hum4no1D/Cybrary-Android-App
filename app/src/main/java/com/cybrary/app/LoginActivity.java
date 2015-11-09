@@ -30,13 +30,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends Activity {
-    private Tracker mTracker;
-
     SharedPreferences credentials;
-    EditText user,pass;
+    EditText user, pass;
     TextView usertitle, pwdtitle, forgot;
     ProgressDialog dialog = null;
     CookieManager cookieManager;
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,20 +52,19 @@ public class LoginActivity extends Activity {
 
         //  Auto-login has been disabled since Cybrary removes cookies after browser is closed
         //  This behavior can easily be restored once using the API (we'll get a long-lived token)
-        if(credentials.contains("login")) {
+        if (credentials.contains("login")) {
             Toast.makeText(this, "Automatically logged in as " + credentials.getString("login", ""), Toast.LENGTH_SHORT).show();
             startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
             finish();
         }
 
 
-
-        usertitle = (TextView)findViewById(R.id.title);
+        usertitle = (TextView) findViewById(R.id.title);
         Typeface batman = Typeface.createFromAsset(getAssets(), "batman.ttf");
         usertitle.setTypeface(batman);
-        pwdtitle = (TextView)findViewById(R.id.pwd);
+        pwdtitle = (TextView) findViewById(R.id.pwd);
         pwdtitle.setTypeface(batman);
-        forgot = (TextView)findViewById(R.id.textView2);
+        forgot = (TextView) findViewById(R.id.textView2);
         forgot.setTypeface(batman);
 
     }
@@ -78,16 +76,16 @@ public class LoginActivity extends Activity {
         super.onResume();
     }
 
-    public void Log_in(View e){
-        user = (EditText)findViewById(R.id.Login);
-        pass = (EditText)findViewById(R.id.Senha);
+    public void Log_in(View e) {
+        user = (EditText) findViewById(R.id.Login);
+        pass = (EditText) findViewById(R.id.Senha);
         dialog = ProgressDialog.show(LoginActivity.this, "", "Validating user...", true);
 
         String reqUrl = "https://www.cybrary.it/wp-login.php";
         final String log = user.getText().toString().trim().toLowerCase();
         final String pwd = pass.getText().toString().trim();
 
-        if(log.isEmpty() || pwd.isEmpty()) {
+        if (log.isEmpty() || pwd.isEmpty()) {
             Toast.makeText(LoginActivity.this, "You need to fill in both fields!", Toast.LENGTH_LONG).show();
             dialog.dismiss();
             return;
@@ -100,7 +98,7 @@ public class LoginActivity extends Activity {
             public void onResponse(String response) {
                 try {
                     dialog.dismiss();
-                } catch(IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     //  Dialog is not currently shown (user rotated devices while logging in for instance)
                 }
 
@@ -112,13 +110,11 @@ public class LoginActivity extends Activity {
                 Boolean reallyLoggedIn = response.contains("Cybrary Tag:");
 
 
-                if(invalidUsername) {
+                if (invalidUsername) {
                     Toast.makeText(LoginActivity.this, "Invalid username", Toast.LENGTH_SHORT).show();
-                }
-                else if(invalidPassword) {
+                } else if (invalidPassword) {
                     Toast.makeText(LoginActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
-                }
-                else if(reallyLoggedIn) {
+                } else if (reallyLoggedIn) {
                     Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
 
                     getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().putString("login", log).commit();
@@ -126,8 +122,7 @@ public class LoginActivity extends Activity {
                     //Now, start CoursesListActivity
                     // startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
                     finish();
-                }
-                else {
+                } else {
                     Toast.makeText(LoginActivity.this, "Login failure :(", Toast.LENGTH_SHORT).show();
                     Log.i("LoginActivity", "Login failure, server replied: " + response);
                 }
@@ -152,7 +147,9 @@ public class LoginActivity extends Activity {
                 params.put("log", log);
                 params.put("pwd", pwd);
                 return params;
-            };
+            }
+
+            ;
         };
 
 
@@ -161,7 +158,7 @@ public class LoginActivity extends Activity {
     }
 
 
-    public void register(View c){
+    public void register(View c) {
         Intent registerBtn = new Intent(this, WebviewActivity.class);
         registerBtn.putExtra("url", "https://www.cybrary.it/register/");
         startActivity(registerBtn);
@@ -169,17 +166,14 @@ public class LoginActivity extends Activity {
     }
 
 
-    public void lossPassword(View d){
+    public void lossPassword(View d) {
         Intent Recuperar = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/wp-login.php?action=lostpassword"));
         startActivity(Recuperar);
     }
 
-    public void cancelLogin(View v)
-    {
+    public void cancelLogin(View v) {
         finish();
     }
-
-
 
 
 }

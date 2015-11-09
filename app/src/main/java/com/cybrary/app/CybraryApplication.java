@@ -14,7 +14,7 @@ public class CybraryApplication extends Application {
     private Tracker mTracker;
 
     public PersistentCookieStore getCookieStore(Context context) {
-        if(persistentCookieStore == null) {
+        if (persistentCookieStore == null) {
             persistentCookieStore = new PersistentCookieStore(context);
         }
         return persistentCookieStore;
@@ -23,6 +23,7 @@ public class CybraryApplication extends Application {
 
     /**
      * Gets the default {@link Tracker} for this {@link Application}.
+     *
      * @return tracker
      */
     synchronized public Tracker getDefaultTracker() {

@@ -6,8 +6,7 @@
             android:dialogMessage="Do you really want to  remove all downloaded videos?"
             android:key="reset"
             android:summary="Remove all offline videos"
-            android:title="Clean offline storage">
-        </com.cybrary.app.preference.ResetPreference>
+            android:title="Clean offline storage"></com.cybrary.app.preference.ResetPreference>
     </PreferenceCategory>
     <PreferenceCategory android:title="Video settings">
         <ListPreference
@@ -16,7 +15,7 @@
             android:entryValues="@array/qualityValues"
             android:key="quality"
             android:summary="Pick video quality depending on your Internet connection"
-            android:title="Video quality"/>
+            android:title="Video quality" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="autoplay"

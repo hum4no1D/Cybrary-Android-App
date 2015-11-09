@@ -29,8 +29,8 @@ public class ResetPreference extends DialogPreference {
 
             String[] videos = currentVideos.split("\\|");
             int counter = 0;
-            for(String video: videos) {
-                if(!video.isEmpty()){
+            for (String video : videos) {
+                if (!video.isEmpty()) {
                     Log.i("ResetPreference", "Cleaning " + video);
                     File f = new File(video);
                     f.delete();

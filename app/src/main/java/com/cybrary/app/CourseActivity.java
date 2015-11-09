@@ -122,7 +122,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
                 moveToVideo(1);
             }
         });
-        
+
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,20 +133,19 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         fullscreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                     CourseActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                }
-                else {
+                } else {
                     CourseActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 }
             }
         });
 
         videoPosition = getSharedPreferences("videoPosition", Context.MODE_PRIVATE);
-   }
+    }
 
     public Video getCurrentVideo() {
-        if(listView.getAdapter() != null && currentVideoIndex
+        if (listView.getAdapter() != null && currentVideoIndex
                 != -1) {
             return (Video) listView.getAdapter().getItem(currentVideoIndex);
         }
@@ -184,7 +183,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
 
     public void moveToVideo(int delta) {
         Log.i("CourseActivity", "Trying to move to video " + currentVideoIndex + " delta " + delta);
-        if(canPlayVideo(delta)) {
+        if (canPlayVideo(delta)) {
             currentVideoIndex += delta;
             Video next = (Video) listView.getAdapter().getItem(currentVideoIndex);
             next.getMp4Url(CourseActivity.this, CourseActivity.this);
@@ -201,16 +200,15 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         next.setVisibility(canPlayVideo(1) ? View.VISIBLE : View.INVISIBLE);
     }
 
-    public void onConfigurationChanged (Configuration newConfig) {
+    public void onConfigurationChanged(Configuration newConfig) {
         View videoPlayer = findViewById(R.id.videoWrapper);
 
-        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             videoPlayer.setLayoutParams(lp);
             getSupportActionBar().hide();
             getWindow().getDecorView().setBackgroundColor(Color.BLACK);
-        }
-        else {
+        } else {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 200);
             lp.weight = 1.0f;
             lp.gravity = Gravity.CENTER_HORIZONTAL;
@@ -245,7 +243,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
                 // use a regexp to match them all in the raw HTML:
                 Pattern p = Pattern.compile("cybrary\\.it/video/(.+)\" class=\"title\">([^\\>]+)\\<\\/a\\>");
                 Matcher m = p.matcher(response);
-                while(m.find()) {
+                while (m.find()) {
                     String url = "https://www.cybrary.it/video/" + m.group(1);
                     String name = m.group(2);
                     Video video = new Video(name, url);
@@ -256,7 +254,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
 
                 // Play the first video automatically,
                 //  Or restart on last known video
-                if(videos.size() > 0) {
+                if (videos.size() > 0) {
                     moveToVideo(1 + videoPosition.getInt(course.name, 0));
                 }
             }
@@ -282,7 +280,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         vidView.setVideoURI(vidUri);
         vidView.start();
 
-        if(videoPosition.contains(Integer.toString(video.getId()))) {
+        if (videoPosition.contains(Integer.toString(video.getId()))) {
             //  Resuming from earlier play
             int position = videoPosition.getInt(Integer.toString(video.getId()), -1);
             Log.i("CourseActivity", "Resuming video at index " + position);
@@ -290,7 +288,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
             vidView.seekTo(position);
         }
 
-        if(loadingFirstVideo && !PreferenceManager.getDefaultSharedPreferences(CourseActivity.this).getBoolean("autoplay", true)) {
+        if (loadingFirstVideo && !PreferenceManager.getDefaultSharedPreferences(CourseActivity.this).getBoolean("autoplay", true)) {
             Log.i("CourseActivity", "Autoplay was disabled.");
             vidView.pause();
             mc.show(2500);
@@ -304,7 +302,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         super.onPause();
 
         Video currentVideo = getCurrentVideo();
-        if(currentVideo != null) {
+        if (currentVideo != null) {
             //  Remember position for current video
             SharedPreferences.Editor editor = videoPosition.edit();
 

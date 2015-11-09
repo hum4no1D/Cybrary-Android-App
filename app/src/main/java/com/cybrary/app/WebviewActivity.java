@@ -28,14 +28,14 @@ public class WebviewActivity extends LoggedInAbstractActivity {
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeSessionCookie();
 
-        for(HttpCookie cookie : cookies) {
+        for (HttpCookie cookie : cookies) {
             String cookieString = cookie.getName() + "=" + cookie.getValue() + "; domain=" + cookie.getDomain();
             cookieManager.setCookie(cookie.getDomain(), cookieString);
         }
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
+        if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             cookieManager.flush();
-        } else{
+        } else {
             CookieSyncManager.getInstance().sync();
         }
 
@@ -44,7 +44,7 @@ public class WebviewActivity extends LoggedInAbstractActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                if(url.contains("wp-login.php")) {
+                if (url.contains("wp-login.php")) {
                     //  User is trying to log in on the webview!
                     //  Redirect to our login page instead
                     getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().remove("login").apply();
