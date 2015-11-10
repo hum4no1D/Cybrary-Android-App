@@ -10,7 +10,7 @@ import com.android.volley.VolleyError;
 public abstract class CachedResponseListener implements Response.Listener<String>, Response.ErrorListener {
     private static final String TAG = "CachedResponseListener";
     private final String url;
-    protected Boolean usedCacheFallback = false;
+    private Boolean usedCacheFallback = false;
     private Context context;
     private SharedPreferences sp;
 

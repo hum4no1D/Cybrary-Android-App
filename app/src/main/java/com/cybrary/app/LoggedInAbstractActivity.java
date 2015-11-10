@@ -17,7 +17,7 @@ import com.google.android.gms.analytics.Tracker;
  * Created by cybrary02 on 9/28/15.
  */
 public abstract class LoggedInAbstractActivity extends AppCompatActivity {
-    protected Tracker mTracker;
+    Tracker mTracker;
 
 
     @Override
@@ -91,7 +91,7 @@ public abstract class LoggedInAbstractActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void logOut() {
+    private void logOut() {
         // Log the user out
         getSharedPreferences("credentials", Context.MODE_PRIVATE).edit().remove("login").commit();
         ((CybraryApplication) getApplication()).getCookieStore(this).removeAll();

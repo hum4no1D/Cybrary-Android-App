@@ -144,7 +144,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         videoPosition = getSharedPreferences("videoPosition", Context.MODE_PRIVATE);
     }
 
-    public Video getCurrentVideo() {
+    private Video getCurrentVideo() {
         if (listView.getAdapter() != null && currentVideoIndex
                 != -1) {
             return (Video) listView.getAdapter().getItem(currentVideoIndex);
@@ -154,7 +154,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
     }
 
 
-    public void initializeListView() {
+    private void initializeListView() {
         listView = (ListView) findViewById(R.id.listView);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -177,11 +177,11 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         listView.setAdapter(new VideoAdapter(CourseActivity.this, new ArrayList<Video>()));
     }
 
-    public boolean canPlayVideo(int delta) {
+    private boolean canPlayVideo(int delta) {
         return currentVideoIndex + delta >= 0 && currentVideoIndex + delta < listView.getAdapter().getCount();
     }
 
-    public void moveToVideo(int delta) {
+    private void moveToVideo(int delta) {
         Log.i("CourseActivity", "Trying to move to video " + currentVideoIndex + " delta " + delta);
         if (canPlayVideo(delta)) {
             currentVideoIndex += delta;
@@ -224,7 +224,7 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         super.onConfigurationChanged(newConfig);
     }
 
-    public void downloadVideos(final Course course) {
+    private void downloadVideos(final Course course) {
         // Download the list of courses from the website
         // Creating a new Volley HTTP GET request
         String reqUrl = course.url;

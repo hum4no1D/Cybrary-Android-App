@@ -37,9 +37,9 @@ import java.util.regex.Pattern;
  */
 public class Video {
     public String name;
-    public String url;
-    public String vimeoMetadataUrl = null;
-    public JSONObject vimeoMetadata = null;
+    private String url;
+    private String vimeoMetadataUrl = null;
+    private JSONObject vimeoMetadata = null;
     public String videoUrl = null;
     public Boolean isDownloading = false;
     public int downloadProgress = 0;
@@ -80,7 +80,7 @@ public class Video {
      *
      * @return
      */
-    public void getMp4Url(Context context, VideoUrlListener listener) {
+    public void getMp4Url(Activity context, VideoUrlListener listener) {
 
         // URL already loaded
         if (videoUrl != null) {
@@ -237,7 +237,7 @@ public class Video {
         queue.add(messagesRequest);
     }
 
-    private void retrieveVimeoUrl(final Context context, final VideoUrlListener listener) {
+    private void retrieveVimeoUrl(final Activity context, final VideoUrlListener listener) {
         // Download the Cybary video page, and retrieve the vimeo URL
         // Creating a new Volley HTTP GET request
         RequestQueue queue = Volley.newRequestQueue(context);

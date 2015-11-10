@@ -59,7 +59,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
 */
     }
 
-    public void downloadCourses() {
+    private void downloadCourses() {
         final ProgressDialog dialog = ProgressDialog.show(this, "",
                 "Downloading latest courses...", true);
 
@@ -153,7 +153,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
         queue.add(messagesRequest);
     }
 
-    public void initializeListView() {
+    private void initializeListView() {
         listView = (StickyListHeadersListView) findViewById(com.cybrary.app.R.id.listView);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

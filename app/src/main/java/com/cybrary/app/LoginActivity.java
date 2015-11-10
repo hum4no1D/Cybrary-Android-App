@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,11 +29,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends Activity {
-    SharedPreferences credentials;
-    EditText user, pass;
-    TextView usertitle, pwdtitle, forgot;
-    ProgressDialog dialog = null;
-    CookieManager cookieManager;
+    private SharedPreferences credentials;
+    private EditText user;
+    private EditText pass;
+    private TextView usertitle;
+    private TextView pwdtitle;
+    private TextView forgot;
+    private ProgressDialog dialog = null;
+    private CookieManager cookieManager;
     private Tracker mTracker;
 
     @Override
@@ -167,7 +169,8 @@ public class LoginActivity extends Activity {
 
 
     public void lossPassword(View d) {
-        Intent Recuperar = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.cybrary.it/wp-login.php?action=lostpassword"));
+        Intent Recuperar = new Intent(this, WebviewActivity.class);
+        Recuperar.putExtra("url","https://www.cybrary.it/my-account/lost-password/");
         startActivity(Recuperar);
     }
 
