@@ -52,13 +52,6 @@ public class LoginActivity extends Activity {
 
         credentials = getSharedPreferences("credentials", Context.MODE_PRIVATE);
 
-        //  Auto-login has been disabled since Cybrary removes cookies after browser is closed
-        //  This behavior can easily be restored once using the API (we'll get a long-lived token)
-        if (credentials.contains("login")) {
-            Toast.makeText(this, "Automatically logged in as " + credentials.getString("login", ""), Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(LoginActivity.this, CoursesListActivity.class));
-            finish();
-        }
 
 
         usertitle = (TextView) findViewById(R.id.title);
