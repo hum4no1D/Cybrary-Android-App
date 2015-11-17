@@ -9,8 +9,8 @@ android {
         applicationId 'com.cybrary.app'
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 17
-        versionName "2.0.5"
+        versionCode 19
+        versionName "2.0.7"
     }
     buildTypes {
         release {
@@ -30,6 +30,8 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.15'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
     compile 'com.google.android.gms:play-services-analytics:8.1.0'
+    compile 'com.parse.bolts:bolts-android:1.+'
+    compile 'com.parse:parse-android:1.+'
 
 
 }
