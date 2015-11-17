@@ -23,8 +23,10 @@ import java.util.ArrayList;
 
 public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListener {
     public final static String PREFERENCE_TAG = "videoStore";
+    public static int MAX_CONCURRENT_DOWNLOADS = 10;
+
     private final CourseActivity parent;
-    public int count = 0;
+    public static int count = 0;
 
     public VideoAdapter(CourseActivity context, ArrayList<Video> videos) {
         super(context, 0, videos);
@@ -50,7 +52,7 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (count >= 2) {
+                if (count >= MAX_CONCURRENT_DOWNLOADS) {
                     Toast.makeText(v.getContext(), "Can't download more than 2 videos at a time", Toast.LENGTH_LONG).show();
                     return;
                 }
