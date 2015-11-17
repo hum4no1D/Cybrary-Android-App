@@ -39,12 +39,13 @@ import java.util.regex.Pattern;
  */
 public class Video {
     public String name;
-    private String url;
-    private String vimeoMetadataUrl = null;
-    private JSONObject vimeoMetadata = null;
     public String videoUrl = null;
     public Boolean isDownloading = false;
     public int downloadProgress = 0;
+    private String url;
+    private String vimeoMetadataUrl = null;
+    private JSONObject vimeoMetadata = null;
+
     public Video(String name, String url) {
         this.name = name;
         this.url = url;
@@ -183,7 +184,7 @@ public class Video {
             public void onResponse(String response) {
                 if (!response.contains(".mp4")) {
                     Toast.makeText(context, "Can't access private Vimeo URL :(", Toast.LENGTH_LONG).show();
-                    Log.e("VIMEO", response);
+                    Log.e("Video", response);
                     return;
                 }
 
@@ -196,24 +197,29 @@ public class Video {
                     try {
                         vimeoMetadata = new JSONObject(m.group(1));
 
-                        String quality = PreferenceManager.getDefaultSharedPreferences(context).getString("quality", "sd");
-                        Log.i("Video", "Downloading video with quality " + quality);
+                        String expectedQuality = PreferenceManager.getDefaultSharedPreferences(context).getString("quality", "sd");
+                        Log.i("Video", "Downloading video with quality " + expectedQuality);
                         JSONArray qualities = vimeoMetadata.getJSONObject("request").getJSONObject("files").getJSONArray("progressive");
 
-                        try {
+                        //  Find the right quality according to user preference
+                        for (int i = 0; i < qualities.length(); i++) {
+                            JSONObject quality = qualities.getJSONObject(i);
+                            if (quality.getString("quality").equals(expectedQuality)) {
+                                videoUrl = quality.getString("url");
+                                break;
+                            }
+                        }
+
+                        if (videoUrl == null) {
+                            Log.i("Video", "Unable to find expected quality. Fall back to first video.");
                             videoUrl = qualities.getJSONObject(0).getString("url");
-                        } catch (JSONException e) {
-                            //  Mobile exception can be missing in some videos
-                            //  in such cases revert to sd quality.
-                            //videoUrl = qualities.getJSONObject("sd").getString("url");
-                            throw e;
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Log.e("VIMEO", "Unable to parse JSON for " + m.group(1));
+                        Log.e("Video", "Unable to parse JSON for " + m.group(1));
                         return;
                     }
-                    Log.i("VIMEO", "Playing video from " + videoUrl);
+                    Log.i("Video", "Playing video from " + videoUrl);
 
                     listener.onUrlLoaded(Video.this);
                 }
@@ -278,8 +284,7 @@ public class Video {
 
                     try {
                         builder.show();
-                    }
-                    catch(WindowManager.BadTokenException e) {
+                    } catch (WindowManager.BadTokenException e) {
                         //  For some reasons, sometime we can't display a dialog to the user
                         //  (suspecting this is due to some activity recyling going on behind the scenes,
                         // for instance if you turn your phone while loading the video url)
