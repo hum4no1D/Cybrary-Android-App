@@ -21,6 +21,7 @@ import com.cybrary.app.LoginActivity;
 import com.cybrary.app.VideoUrlListener;
 import com.cybrary.app.request.CybraryRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -107,6 +108,7 @@ public class Video {
 
             final int totalLength = connection.getContentLength();
 
+            Log.i("VIMEO", "Downloading video, total length: " + totalLength);
             parent.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -196,14 +198,15 @@ public class Video {
 
                         String quality = PreferenceManager.getDefaultSharedPreferences(context).getString("quality", "sd");
                         Log.i("Video", "Downloading video with quality " + quality);
-                        JSONObject qualities = vimeoMetadata.getJSONObject("request").getJSONObject("files").getJSONObject("h264");
+                        JSONArray qualities = vimeoMetadata.getJSONObject("request").getJSONObject("files").getJSONArray("progressive");
 
                         try {
-                            videoUrl = qualities.getJSONObject(quality).getString("url");
+                            videoUrl = qualities.getJSONObject(0).getString("url");
                         } catch (JSONException e) {
                             //  Mobile exception can be missing in some videos
                             //  in such cases revert to sd quality.
-                            videoUrl = qualities.getJSONObject("sd").getString("url");
+                            //videoUrl = qualities.getJSONObject("sd").getString("url");
+                            throw e;
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
