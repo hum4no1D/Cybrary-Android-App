@@ -102,7 +102,6 @@ public class Video {
         String fileName = getPotentialFileName() + "-temp";
 
         try {
-
             URL url = new URL(videoUrl);
             URLConnection connection = url.openConnection();
             connection.connect();
