@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
 
@@ -274,7 +275,20 @@ public class Video {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setMessage("You need to login to view videos.").setPositiveButton("OK", dialogClickListener)
-                            .setNegativeButton("Cancel", dialogClickListener).show();
+                            .setNegativeButton("Cancel", dialogClickListener);
+
+                    try {
+                        builder.show();
+                    }
+                    catch(WindowManager.BadTokenException e) {
+                        //  For some reasons, sometime we can't display a dialog to the user
+                        //  (suspecting this is due to some activity recyling going on behind the scenes,
+                        // for instance if you turn your phone while loading the video url)
+                        //  if this happens, instead of displaying the dialog we just open the login activity directly,
+                        //  without showing a rationale.
+                        context.startActivity(new Intent(context, LoginActivity.class));
+                    }
+
                     isDownloading = false;
                 } else {
                     // Next steps: download vimeo metadata
