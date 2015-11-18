@@ -142,6 +142,18 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
         });
 
         videoPosition = getSharedPreferences("videoPosition", Context.MODE_PRIVATE);
+        Log.d("Whatever", "canPause: " + vidView.canPause());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // can you type here
+        if (!vidView.isPlaying()) {
+            Log.d("Whatever", "Is not playing");
+            vidView.start();
+        }
     }
 
     private Video getCurrentVideo() {
@@ -300,6 +312,15 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
     @Override
     protected void onPause() {
         super.onPause();
+
+//        PowerManager mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+//        MediaPlayer mp = new MediaPlayer();
+//        if (!mPowerManager.isScreenOn())
+//            if (mp!= null && mp.isPlaying())
+//                mp.stop();
+
+        vidView.pause();
+
 
         Video currentVideo = getCurrentVideo();
         if (currentVideo != null) {

@@ -53,7 +53,7 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
             @Override
             public void onClick(View v) {
                 if (count >= MAX_CONCURRENT_DOWNLOADS) {
-                    Toast.makeText(v.getContext(), "Can't download more than 2 videos at a time", Toast.LENGTH_LONG).show();
+                    Toast.makeText(v.getContext(), "Can't download more than 10 videos at a time", Toast.LENGTH_LONG).show();
                     return;
                 }
 
