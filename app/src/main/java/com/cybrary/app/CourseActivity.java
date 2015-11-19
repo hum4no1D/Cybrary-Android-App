@@ -149,7 +149,6 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
     protected void onResume() {
         super.onResume();
 
-        // can you type here
         if (!vidView.isPlaying()) {
             Log.d("Whatever", "Is not playing");
             vidView.start();
