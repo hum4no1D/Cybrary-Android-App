@@ -6,29 +6,20 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <!--
-      IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below
-      to match your app's package name + ".permission.C2D_MESSAGE".
-    -->
-    <permission android:protectionLevel="signature"
-        android:name="com.cybrary.app.permission.C2D_MESSAGE" />
-    <uses-permission android:name="com.cybrary.app.permission.C2D_MESSAGE" />
 
     <application
-        android:name=".CybraryApplication"
+        android:name="com.cybrary.app.CybraryApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name="com.cybrary.app.LoginActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
-            android:name=".CoursesListActivity"
+            android:name="com.cybrary.app.CoursesListActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,14 +28,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CourseActivity"
+            android:name="com.cybrary.app.CourseActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_videoplayer"
-            android:parentActivityName=".CoursesListActivity"></activity>
+            android:parentActivityName="com.cybrary.app.CoursesListActivity"></activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.cybrary.app.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".CoursesListActivity">
+            android:parentActivityName="com.cybrary.app.CoursesListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cybrary.app.CoursesListActivity" />
@@ -82,9 +73,9 @@
         <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
 
         <activity
-            android:name=".WebviewActivity"
+            android:name="com.cybrary.app.WebviewActivity"
             android:label="@string/title_activity_webview"
-            android:parentActivityName=".CoursesListActivity"></activity>
+            android:parentActivityName="com.cybrary.app.CoursesListActivity"></activity>
         <service android:name="com.parse.PushService" />
         <receiver android:name="com.parse.ParsePushBroadcastReceiver"
             android:exported="false">

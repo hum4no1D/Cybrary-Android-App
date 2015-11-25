@@ -9,7 +9,7 @@ android {
         applicationId 'com.cybrary.app'
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 21
+        versionCode 22
         versionName "2.0.8"
     }
     buildTypes {
@@ -23,7 +23,6 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.google.code.gson:gson:2.3.+'
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.android.support:appcompat-v7:23.0.1'
