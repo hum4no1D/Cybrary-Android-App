@@ -13,6 +13,9 @@
     <string name="action_profile">My Profile</string>
     <string name="action_cybytes">Cybytes</string>
     <string name="title_activity_webview">Cybrary.it</string>
+    <string name="banner_ad_unit_id">ca-app-pub-7525466411818117/8410995589</string>
+    <string name="banner_ad_unit_id2">ca-app-pub-7525466411818117/9159371987</string>
+
 
 
 </resources>

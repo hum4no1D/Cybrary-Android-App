@@ -19,6 +19,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.cybrary.app.request.CybraryRequest;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -44,6 +46,13 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+        AdView mAdView = (AdView)this.findViewById(R.id.adView);
+        AdRequest adRequest= new AdRequest.Builder()
+        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
+         .build();
+        mAdView.loadAd(adRequest);
+
         CybraryApplication application = (CybraryApplication) getApplication();
         mTracker = application.getDefaultTracker();
 
@@ -61,6 +70,8 @@ public class LoginActivity extends Activity {
         pwdtitle.setTypeface(batman);
         forgot = (TextView) findViewById(R.id.textView2);
         forgot.setTypeface(batman);
+
+
 
     }
 

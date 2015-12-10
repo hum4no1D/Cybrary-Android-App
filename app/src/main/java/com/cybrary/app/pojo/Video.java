@@ -56,7 +56,12 @@ public class Video {
      * This id can be used to check if the video is already available in the cache
      */
     public int getId() {
-        return url.replace("https://www.cybary.it", "").hashCode();
+        return url.replace("https://www.cybrary.it", "").hashCode();
+    }
+
+    //  Id used in previous version of the app
+    public int getAlternativeId() {
+        return url.hashCode();
     }
 
     public String getPotentialFileName() {
@@ -66,15 +71,31 @@ public class Video {
         return basePath + "cybrary-" + getId() + ".mp4";
     }
 
+    public String getPotentialAlternativeFileName() {
+        String basePath = Environment.getExternalStorageDirectory() + "/cybrary/";
+        File dir = new File(basePath);
+        dir.mkdir();
+        return basePath + "cybrary-" + getAlternativeId() + ".mp4";
+    }
+
     public void removeLocalCopy() {
         if (this.isLocallyAvailable()) {
             File f = new File(getPotentialFileName());
+            f.delete();
+        }
+        else if(isLocallyAvailableAlternative()) {
+            File f = new File(getPotentialAlternativeFileName());
             f.delete();
         }
     }
 
     public boolean isLocallyAvailable() {
         File f = new File(getPotentialFileName());
+        return f.exists();
+    }
+
+    public boolean isLocallyAvailableAlternative() {
+        File f = new File(getPotentialAlternativeFileName());
         return f.exists();
     }
 

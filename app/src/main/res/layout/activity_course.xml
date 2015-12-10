@@ -1,27 +1,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    >
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id2">
+    </com.google.android.gms.ads.AdView>
+
 
     <RelativeLayout
+
         android:id="@+id/videoWrapper"
         android:layout_width="fill_parent"
         android:layout_height="200dp"
         android:background="@android:color/black"
-        android:gravity="center">
+        android:gravity="center"
+
+        >
+
+
 
         <VideoView
             android:id="@+id/myVideo"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+
+            />
+
+
 
         <ImageView
             android:id="@+id/next_video"
@@ -51,7 +69,9 @@
             android:layout_margin="6dp"
             android:background="#AAAAAAAA"
             android:src="@drawable/ic_fullscreen_black_24dp" />
+
     </RelativeLayout>
+
 
 
     <TextView

@@ -32,6 +32,8 @@ import com.cybrary.app.listener.CachedResponseListener;
 import com.cybrary.app.pojo.Course;
 import com.cybrary.app.pojo.Video;
 import com.cybrary.app.request.CybraryRequest;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 
 import java.net.CookieHandler;
@@ -57,6 +59,12 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
+
+        AdView mAdView = (AdView)this.findViewById(R.id.adView);
+        AdRequest adRequest= new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
+                .build();
+        mAdView.loadAd(adRequest);
 
         // restore the manifest to add the LAUNCHERAintent to the LoginActivity
         course = (Course) getIntent().getSerializableExtra("course");
@@ -178,6 +186,12 @@ public class CourseActivity extends LoggedInAbstractActivity implements VideoUrl
                     // Video is already available, no need to download it again.
                     vidView.setVideoURI(Uri.parse(video.getPotentialFileName()));
                     vidView.start();
+                }
+                else if(video.isLocallyAvailableAlternative()) {
+                        Log.i("CourseActivity", "Video " + video.getAlternativeId() + " is already available for offline use on alternative path.");
+                        // Video is already available, no need to download it again.
+                        vidView.setVideoURI(Uri.parse(video.getPotentialAlternativeFileName()));
+                        vidView.start();
                 } else {
                     Log.i("CourseActivity", "Now retrieving metadata for " + video.getId());
                     video.getMp4Url(CourseActivity.this, CourseActivity.this);

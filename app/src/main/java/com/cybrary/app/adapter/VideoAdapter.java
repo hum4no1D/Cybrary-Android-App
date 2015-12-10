@@ -75,7 +75,7 @@ public class VideoAdapter extends ArrayAdapter<Video> implements VideoUrlListene
             }
         });
 
-        if (video.isLocallyAvailable() && !video.isDownloading) {
+        if ((video.isLocallyAvailable() || video.isLocallyAvailableAlternative()) && !video.isDownloading) {
             // Video can be played offline
             downloadButton.setVisibility(View.INVISIBLE);
             deleteButton.setVisibility(View.VISIBLE);

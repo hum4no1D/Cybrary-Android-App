@@ -3,7 +3,6 @@ package com.cybrary.app;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -20,24 +19,22 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class CoursesListActivity extends LoggedInAbstractActivity {
-    public static final String TAG = "CoursesListActivity";
-
-    public static final String[] BANNED_COURSES = new String[]{
-            "https://www.cybrary.it/course/post-exploitation-hacking/",
-            "https://www.cybrary.it/course/advanced-penetration-testing/",
-            "https://www.cybrary.it/course/ethical-hacking/",
-            "https://www.cybrary.it/course/social-engineering/"
-    };
+//    public static final String TAG = "CoursesListActivity";
+//
+//    public static final String[] BANNED_COURSES = new String[]{
+//            "https://www.cybrary.it/course/post-exploitation-hacking/",
+//            "https://www.cybrary.it/course/advanced-penetration-testing/",
+//            "https://www.cybrary.it/course/ethical-hacking/",
+//            "https://www.cybrary.it/course/social-engineering/"
+//    };
 
     private StickyListHeadersListView listView;
 
@@ -45,6 +42,8 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.cybrary.app.R.layout.activity_courses_list);
+
+
 
         initializeListView();
 
@@ -85,7 +84,7 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
             public void onResponse(String response) {
                 super.onResponse(response);
 
-                List<String> bannedCourses = Arrays.asList(BANNED_COURSES);
+//                List<String> bannedCourses = Arrays.asList(BANNED_COURSES);
 
                 //Server replied successfully (200)
                 //Now we want to list the available courses
@@ -121,15 +120,17 @@ public class CoursesListActivity extends LoggedInAbstractActivity {
                     while (courseMatcher.find()) {
                         String url = "https://www.cybrary.it/course/" + courseMatcher.group(1);
                         String name = courseMatcher.group(2);
-
-                        if (!bannedCourses.contains(url)) {
-                            Course course = new Course(name, url, currentCategory);
-                            courses.add(course);
-                            Log.i(TAG, "Adding course: " + name);
-                        }
-                        else {
-                            Log.i(TAG, "Skipping course " + name);
-                        }
+                        Course course = new Course(name, url, currentCategory);
+                        courses.add(course);
+//
+//                        if (!bannedCourses.contains(url)) {
+//                            Course course = new Course(name, url, currentCategory);
+//                            courses.add(course);
+//                            Log.i(TAG, "Adding course: " + name);
+//                        }
+//                        else {
+//                            Log.i(TAG, "Skipping course " + name);
+//                        }
                     }
                 }
 
